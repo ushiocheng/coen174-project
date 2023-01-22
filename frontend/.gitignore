@@ -3,7 +3,7 @@
 
 # node/yarn stuff
 node_modules
-/dist
+dist
 yarn.lock
 
 # local env files

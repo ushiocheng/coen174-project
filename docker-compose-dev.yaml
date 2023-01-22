@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+    frontend-nginx:
+        build:
+            context: ./frontend
+            dockerfile: dockerfile
+        ports:
+            - "60080:80" # Outbound traffic
+        networks:
+            - main-internal-network
+        restart: unless-stopped
+        depends_on:
+            - backend-node
+    backend-node:
+        build:
+            context: ./backend
+            dockerfile: dockerfile
+        ports:
+            - "60180:60180" # Outbound traffic
+        networks:
+            - main-internal-network
+        restart: unless-stopped
+networks:
+    # Cross Application Networks
+    main-internal-network:
+        driver: bridge

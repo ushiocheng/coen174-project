@@ -3,7 +3,7 @@ services:
     frontend-nginx:
         build:
             context: ./frontend
-            dockerfile: dockerfile
+            dockerfile: Dockerfile
         ports:
             - "80:80"   # Outbound traffic on port 80
                         # TODO: change to ssh on deploy
@@ -15,7 +15,7 @@ services:
     backend-node:
         build:
             context: ./backend
-            dockerfile: dockerfile
+            dockerfile: Dockerfile
         networks:
             - main-internal-network
         restart: unless-stopped

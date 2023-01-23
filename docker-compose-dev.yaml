@@ -3,7 +3,7 @@ services:
     frontend-nginx:
         build:
             context: ./frontend
-            dockerfile: dockerfile
+            dockerfile: Dockerfile
         ports:
             - "60080:80" # Outbound traffic
         networks:
@@ -14,7 +14,7 @@ services:
     backend-node:
         build:
             context: ./backend
-            dockerfile: dockerfile
+            dockerfile: Dockerfile
         ports:
             - "60180:60180" # Outbound traffic
         networks:

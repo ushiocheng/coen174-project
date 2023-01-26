@@ -7,7 +7,7 @@
 // When user enters course title, match it to one of the existing courses
 let selectedQuarter = "Winter 2023"; // Get string from form
 let selectedQuarterID;
-let query = "COEN 174"; // Get string from form
+let query = "COEN"; // Get string from form
 
 async function search() {
   let response = await fetch("https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/");

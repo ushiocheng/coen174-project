@@ -1,3 +1,8 @@
+
+//note: padding feature to implement minimum time between two classes
+//10 minute difference -> 5 minute padding for each class
+//branch names can be feature-...
+
 //sorting method by the starting time of a class
 function compareFn(a, b) {
     if (a[1][0]< b[1][0]) {

@@ -4,7 +4,7 @@
 
     // List of extensions which should be recommended for users of this workspace.
     "recommendations": [
-		// Generic coding stuff
+		//! Generic coding stuff
         "GitHub.vscode-pull-request-github",
         "mhutchie.git-graph",
         "oderwat.indent-rainbow",
@@ -12,12 +12,12 @@
         "aaron-bond.better-comments",
         "VisualStudioExptTeam.vscodeintellicode",
         "christian-kohler.path-intellisense",
-		// Additional generic tools
+		//! Additional generic tools
         "ms-vscode-remote.remote-ssh",
         "yzhang.markdown-all-in-one",
         "emilast.LogFileHighlighter",
         "WallabyJs.quokka-vscode",
-		// Framework specific stuff
+		//! Framework specific stuff
         "Vue.volar",
         "octref.vetur",
         "ExpressSnippets.vscode-express-snippets",

@@ -6,7 +6,7 @@
 
 Docker only!
 
-Recommended: node.js, vue-cli, yarn
+Recommended: VSCode, node.js, vue-cli, yarn
 
 ### commands
 

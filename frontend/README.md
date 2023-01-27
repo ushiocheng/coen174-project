@@ -5,6 +5,7 @@
     red {
         color: red;
     }
+    /* github just really don't like inlining HTML in markdown isn't it */
 </style>
 
 > While npm can be used for this project, yarn is strongly recommended.

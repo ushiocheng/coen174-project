@@ -7,3 +7,9 @@ dist
 
 # ignore npm lock file since yarn would fail when npm lock file are detected
 package-lock.json
+
+# Development only files
+.dockerignore
+.gitignore
+Dockerfile
+README.md

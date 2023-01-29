@@ -1,7 +1,11 @@
 
+// To get minimum data for all courses alphabetized
+// Use https://www.scu.edu/apps/ws/courseavail/autocomplete/4420/ugrad/courses
 
+// This will give full details of all classes but it is bounded up to a certain point
+// https://www.scu.edu/apps/ws/courseavail/search/4420/ugrad
 
-var data = 
+export const data = 
 {
   "title": "Search: ",
   "results": [
@@ -1794,7 +1798,7 @@ var data =
       "mtg_time_beg_2": "",
       "mtg_time_end_2": "",
       "mtg_facility_2": "",
-      "seats_remaining": "-18",
+      "seats_remaining": "-17",
       "topic": "",
       "units_minimum": "4.00",
       "units_maximum": "4.00",
@@ -4727,5 +4731,3 @@ var data =
     }
   ]
 }
-
-module.exports = {data};

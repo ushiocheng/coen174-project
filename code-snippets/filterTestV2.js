@@ -24,6 +24,17 @@
 //10 minute difference -> 5 minute padding for each class
 
 
+//sort the first day by start times
+//add the first available class
+//then find the next available class
+//with a different class name and non conflictinf start time 
+//until there are no more available classes for the day
+//a list should be kept for each week day that shows classes already added that take up a time slot on that day
+//then the next day should be sorted by start times including the days a part of the already added list
+
+
+
+
 
 function compareFn(a, b) {
     if (a[1][0]< b[1][0]) {
@@ -46,133 +57,9 @@ function compareFn(a, b) {
 };
 
 
-//sort the first day by start times
-//add the first available class
-//then find the next available class
-//with a different class name and non conflictinf start time 
-//until there are no more available classes for the day
-//a list should be kept for each week day that shows classes already added that take up a time slot on that day
-//then the next day should be sorted by start times including the days a part of the already added list
 
 
-
-
-
-tue = []
-wed = []
-thu = []
-fri = []
-
-
-mClasses = classes.filter(function (el)
-{
-  return (el[3].includes("M"))
-}); 
-
-mClasses.sort(compareFn)
-
-//choose a combination of classes
-//for each chosen class add it to the lists (tue, wed, thu, fri) for each other day it takes place
-
-//this really for the chosen mClasses not all of them
-for(item in mCLasses)
-{
-    for (char in item[3])
-    {
-        if(char=="T")
-        {
-            //notice the dimenssion differnce makes these disernable as 
-            //set times that cannot be ignored
-            tue.append(item.slice(0, 3))
-        }
-        if(char=="W")
-        {
-            wed.append(item.slice(0, 3))
-        }
-        if(char=="R")
-        {
-            thu.append(item.slice(0, 3))
-        }
-        if(char=="F")
-        {
-            fri.append(item.slice(0, 3))
-        }
-
-    }
-}
-
-tClasses = classes.filter(function (el)
-{
-  return (el[3].includes("T"))
-}); 
-
-tClasses.push(...tue)
-tClasses.sort(compareFn)
-
-for(item in tCLasses)
-{
-    for (char in item[3])
-    {
-        if(char=="W")
-        {
-            wed.append(item.slice(0, 3))
-        }
-        if(char=="R")
-        {
-            thu.append(item.slice(0, 3))
-        }
-        if(char=="F")
-        {
-            fri.append(item.slice(0, 3))
-        }
-
-    }
-}
-
-//...
-//more...
-wClasses = classes.filter(function (el)
-{
-  return (el[3].includes("W"))
-}); 
-
-rClasses = classes.filter(function (el)
-{
-  return (el[3].includes("R"))
-}); 
-
-fClasses = classes.filter(function (el)
-{
-  return (el[3].includes("F"))
-}); 
-
-
-
-//sameDay is a bool that says whether to switch
-//days or not
-
-
-
-
-classes = [
-    [ 'AMTH 108', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
-    [ 'AMTH 210', [ 7, 10 ], [ 9, 0 ], 'T' ],
-    [ 'ACTG 130', [ 13, 0 ], [ 14, 5 ], 'MWF' ],  
-    [ 'ACTG 131', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
-    [ 'CHEM 12', [ 13, 0 ], [ 14, 5 ], 'MWF' ],
-    [ 'CHEM 12 Lab', [ 8, 20 ], [ 11, 10 ], 'T' ]
-];
-
-marked = [[],[],[],[],[]]
-
-day = 0
-
-latestClassEnding =0
-
-
-
-
-function intersect(p1, p2)
+function findIntersect(p1, p2)
 {
     if (
     p1[0][0]+p1[0][1]/100.0 < p2[0][0]+p2[0][1]/100.0
@@ -215,22 +102,24 @@ function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,
     {
         for (let i = day; i< 5; i++)
         {
-            Classes = classes.filter(function (el)
+            var Classes = classes.filter(function (el)
             {
                 return (el[3].includes(["M","T","W","R","F"][i]))
             }); 
 
+            Classes.sort(compareFn)
+
             for(let j = index; j<Classes.length; j++)
             {
                 let intersect = false
-                for(pair in marked[i])
+                for(let pair of marked[i])
                 {
-                    if(intersect([Classes[j][1], Classes[j][2]], pair))
+                    if(findIntersect([Classes[j][1], Classes[j][2]], pair))
                     {
                         intersect = true
                     }
                 }
-                if(!intersect, latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 
+                if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 
                 && !classesAdded.has(Classes[j][0]))
                 {
                     classOrder.push(classes[j].slice());
@@ -258,26 +147,32 @@ function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,
 
                 let intersect = false
 
-                for(pair in marked[i])
+                for(let pair of marked[i])
                 {
-                    if(intersect([Classes[j][1], Classes[j][2]], pair))
+                    if(findIntersect([Classes[j][1], Classes[j][2]], pair))
                     {
                         intersect = true
                     }
                 }
 
 
-                if(!intersect, latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
+                if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
                 {
-                    classOrder.push(Classes[j]);
-                    classesAdded.add(Classes[j][0]);
-                    var temp = marked
+                    var tempOrder = classOrder
+                    classOrder.push(Classes[j].slice());
+
+                    var tempClasses = classesAdded;
+                    classesAdded.add(Classes[j][0].slice());
+                    console.log(classesAdded)
+
+                    var tempMarked = marked
 
                     for (let k =0;k < 5; k++)
                     {
-                        if(Classes[j].includes(["M", "T", "W", "R","F"][k]) && !(Classes[j] in marked[k]))
+                        if(Classes[j][3].includes(["M", "T", "W", "R","F"][k]) && !([Classes[j][1], Classes[j][2]] in marked[k]))
                         {
-                            marked[k].push([Classes[j][1], Classes[j][2]])
+                            marked[k].push([Classes[j][1].slice(), Classes[j][2].slice()])
+                            console.log(marked)
                         }
                     }
 
@@ -294,13 +189,32 @@ function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,
                             classes, classesAdded, classOrder, schedules)
                     }
 
-                    marked = temp
-                    classOrder.pop();
-                    classesAdded.delete(Classes[j][0]);
+                    marked = tempMarked
+                    classOrder = tempOrder
+                    classesAdded = tempClasses
                 }
             }     
         }
     }
 }
 
-expand()
+var classes = [
+    [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
+    [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
+    [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
+    [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ]
+];
+
+var marked = [[],[],[],[],[]]
+
+
+var classesAdded = new Set()
+var classOrder = []
+var schedules = []
+
+expand(0, marked, 0, 1, 4, 0, classes,classesAdded, classOrder,schedules)
+
+for (let i =0; i<schedules.length; i++)
+{
+    console.log(schedules[i])
+}

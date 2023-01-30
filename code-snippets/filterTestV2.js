@@ -37,23 +37,13 @@
 
 
 function compareFn(a, b) {
-    if (a[1][0]< b[1][0]) {
-      return -1;
+    if (a[1][0]+a[1][1]/100.0 < b[1][0]+b[1][1]/100.0) {
+      return -1
     }
-    else if (a[1][0]> b[1][0]) {
-      return 1;
+    else if (a[1][0]+a[1][1]/100.0 > b[1][0]+b[1][1]/100.0) {
+      return 1
     }
-    else if(a[1][0] == b[1][0])
-    {
-        if(a[1][1] < b[1][1])
-        {
-            return -1;
-        }
-        else
-        {
-            return 1;
-        }
-    }
+    return 0
 };
 
 
@@ -75,76 +65,70 @@ function findIntersect(p1, p2)
     {
         return true
     }
-    if(
-    p1[0][0]+p1[0][1]/100.0 < p2[0][0]+p2[0][1]/100.0 
-    && 
-    p1[1][0]+p1[1][1]/100.0 > p2[1][0]+p2[1][1]/100.0)
-    {
-        return true
-    }
-    if(
-    p2[0][0]+p2[0][1]/100.0 < p1[0][0]+p1[0][1]/100.0 
-    && 
-    p2[1][0]+p2[1][1]/100.0 > p1[1][0]+p1[1][1]/100.0)
-    {
-        return true
-    }
 
     return false
 }
 
 
-
-function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,classesAdded, classOrder,schedules)
+//[['CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF'], ['CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF']]
+function orderCopy(item1, item2)
 {
-    //used to tell when all desired classes have been added
-    if(depth == maxDepth)
+    for(let i =0; i<item1.length; i++)
     {
-        for (let i = day; i< 5; i++)
+        item2.push([])
+        for(let j =0; j<4; j++)
         {
-            var Classes = classes.filter(function (el)
-            {
-                return (el[3].includes(["M","T","W","R","F"][i]))
-            }); 
+            item2[i].push(item1[i][j])
+        }
+    }
+}
 
-            Classes.sort(compareFn)
+//just copy the names of classes
+function classesCopy(item1, item2)
+{
+    for(let item of item1)
+    {
+        item2.add(item)
+    }
+}
 
-            for(let j = index; j<Classes.length; j++)
+//[[[[ 11, 45 ], [ 12, 50 ]], [[ 11, 45 ], [ 12, 50 ]]], [],[],[]]
+function markedCopy(item1, item2)
+{
+    for(let i =0; i<5; i++)
+    {
+        item2.push([])
+        for(let j =0; j<item1[i].length; j++)
+        {
+            item2[i].push([])
+            for(let k =0; k<2; k++)
             {
-                let intersect = false
-                for(let pair of marked[i])
-                {
-                    if(findIntersect([Classes[j][1], Classes[j][2]], pair))
-                    {
-                        intersect = true
-                    }
-                }
-                if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 
-                && !classesAdded.has(Classes[j][0]))
-                {
-                    classOrder.push(classes[j].slice());
-                    schedules.push(classOrder.slice());
-                    classOrder.pop();
-                }
+                item2[i][j].push(item1[i][j][k])
             }
         }
+    }
+}
 
+
+function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay,classesAdded, classOrder,schedules)
+{
+    //all desired classes have been added
+    if(classesAdded.size == nofClasses)
+    {
+        schedules.push(classOrder.slice());
+    }
+    //the next day is saturday where there are no classes
+    else if(day==5)
+    {
+        return
     }
     else
     {
-        var Classes
         for (let i = day; i< 5; i++)
         {
-            Classes = classes.filter(function (el)
-            {
-                return (el[3].includes(["M","T","W","R","F"][i]))
-            }); 
-            Classes.sort(compareFn)
-
-
+            var Classes = classesByDay[i]
             for(let j = index; j<Classes.length; j++)
             {
-
                 let intersect = false
 
                 for(let pair of marked[i])
@@ -158,40 +142,39 @@ function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,
 
                 if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
                 {
-                    var tempOrder = classOrder
-                    classOrder.push(Classes[j].slice());
 
-                    var tempClasses = classesAdded;
-                    classesAdded.add(Classes[j][0].slice());
-                    console.log(classesAdded)
+                    var tempOrder = []
+                    var tempClasses  = new Set()
+                    var tempMarked = []
 
-                    var tempMarked = marked
+                    orderCopy(classOrder, tempOrder)
+                    classesCopy(classesAdded, tempClasses)
+                    markedCopy(marked, tempMarked)
 
+                    tempOrder.push(Classes[j].slice());
+                    tempClasses.add(Classes[j][0].slice());
+    
+                    //all the classes times on other days must be kept track of
                     for (let k =0;k < 5; k++)
                     {
                         if(Classes[j][3].includes(["M", "T", "W", "R","F"][k]) && !([Classes[j][1], Classes[j][2]] in marked[k]))
                         {
-                            marked[k].push([Classes[j][1].slice(), Classes[j][2].slice()])
-                            console.log(marked)
+                            tempMarked[k].push([Classes[j][1].slice(), Classes[j][2].slice()])
                         }
                     }
 
                     if(j==Classes.length-1){
                         expand(
-                            i+1, marked, 0, depth+1, maxDepth,
-                            0, classes, classesAdded, classOrder, schedules)
+                            i+1, tempMarked, 0, nofClasses,
+                            0, classesByDay, tempClasses, tempOrder, schedules)
                     }
                     else
                     {
                         expand(
-                            i, marked, index+1, depth+1, maxDepth,
+                            i, tempMarked, index+1, nofClasses,
                             Classes[j][2][0]+Classes[j][2][1]/100.0, 
-                            classes, classesAdded, classOrder, schedules)
+                            classesByDay, tempClasses, tempOrder, schedules)
                     }
-
-                    marked = tempMarked
-                    classOrder = tempOrder
-                    classesAdded = tempClasses
                 }
             }     
         }
@@ -199,22 +182,112 @@ function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,
 }
 
 var classes = [
+    [ 'CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF' ],
     [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
     [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
     [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
     [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ]
 ];
 
+
+
 var marked = [[],[],[],[],[]]
-
-
 var classesAdded = new Set()
 var classOrder = []
 var schedules = []
 
-expand(0, marked, 0, 1, 4, 0, classes,classesAdded, classOrder,schedules)
+
+classes.sort(compareFn)
+var classesByDay = []
+
+
+classesByDay.push(classes.filter(function (el)
+{
+    return (el[3].includes("M"))
+}))
+
+classesByDay.push(classes.filter(function (el)
+{
+    return (el[3].includes("T"))
+}))
+
+classesByDay.push(classes.filter(function (el)
+{
+    return (el[3].includes("W"))
+})) 
+
+classesByDay.push(classes.filter(function (el)
+{
+    return (el[3].includes("R"))
+}))
+
+classesByDay.push(classes.filter(function (el)
+{
+    return (el[3].includes("F"))
+})) 
+
+
+
+
+expand(0, marked, 0, 4, 0, classesByDay,classesAdded, classOrder,schedules)
+
 
 for (let i =0; i<schedules.length; i++)
 {
     console.log(schedules[i])
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// for (let i = day; i< 5; i++)
+// {
+//     var Classes = classes.filter(function (el)
+//     {
+//         return (el[3].includes(["M","T","W","R","F"][i]))
+//     }); 
+//     // console.log(Classes)
+
+//     for(let j = index; j<Classes.length; j++)
+//     {
+//         let intersect = false
+//         for(let pair of marked[i])
+//         {
+//             if(findIntersect([Classes[j][1], Classes[j][2]], pair))
+//             {
+//                 intersect = true
+//             }
+//         }
+//         if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 
+//         && !classesAdded.has(Classes[j][0]))
+//         {
+//             classOrder.push(classes[j].slice());
+//             schedules.push(classOrder.slice());
+//             classOrder.pop();
+//         }
+//     }
+// }

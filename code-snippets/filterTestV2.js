@@ -164,75 +164,143 @@ classes = [
 ];
 
 marked = [[],[],[],[],[]]
-dayList = ["M", "T", "W", "R","F"]
+
 day = 0
+
 latestClassEnding =0
 
 
 
 
-function expand(sameDay,  classes, dayList, day, marked, latestClassEnding)
+function intersect(p1, p2)
+{
+    if (
+    p1[0][0]+p1[0][1]/100.0 < p2[0][0]+p2[0][1]/100.0
+    && 
+    p1[1][0] +p1[1][1]/100.0 > p2[0][0]+p2[0][1]/100.0)
+    {
+        return true
+    }
+    if (
+    p2[0][0]+p2[0][1]/100.0 < p1[0][0]+p1[0][1]/100.0 
+    && 
+    p2[1][0]+p2[1][1]/100.0 > p1[0][0]+p1[0][1]/100.0)
+    {
+        return true
+    }
+    if(
+    p1[0][0]+p1[0][1]/100.0 < p2[0][0]+p2[0][1]/100.0 
+    && 
+    p1[1][0]+p1[1][1]/100.0 > p2[1][0]+p2[1][1]/100.0)
+    {
+        return true
+    }
+    if(
+    p2[0][0]+p2[0][1]/100.0 < p1[0][0]+p1[0][1]/100.0 
+    && 
+    p2[1][0]+p2[1][1]/100.0 > p1[1][0]+p1[1][1]/100.0)
+    {
+        return true
+    }
+
+    return false
+}
+
+
+
+function expand(day, marked, index, depth, maxDepth, latestClassEnding, classes,classesAdded, classOrder,schedules)
 {
     //used to tell when all desired classes have been added
     if(depth == maxDepth)
     {
-     
+        for (let i = day; i< 5; i++)
+        {
+            Classes = classes.filter(function (el)
+            {
+                return (el[3].includes(["M","T","W","R","F"][i]))
+            }); 
+
+            for(let j = index; j<Classes.length; j++)
+            {
+                let intersect = false
+                for(pair in marked[i])
+                {
+                    if(intersect([Classes[j][1], Classes[j][2]], pair))
+                    {
+                        intersect = true
+                    }
+                }
+                if(!intersect, latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 
+                && !classesAdded.has(Classes[j][0]))
+                {
+                    classOrder.push(classes[j].slice());
+                    schedules.push(classOrder.slice());
+                    classOrder.pop();
+                }
+            }
+        }
+
     }
     else
     {
+        var Classes
         for (let i = day; i< 5; i++)
         {
-            if(i == day && !sameDay)
+            Classes = classes.filter(function (el)
             {
-                Classes = classes.filter(function (el)
-                {
-                    return (el[3].includes(dayList[i]))
-                }); 
-                Classes.sort(compareFn)
-                latestClassEnding = 0
-            }
+                return (el[3].includes(["M","T","W","R","F"][i]))
+            }); 
+            Classes.sort(compareFn)
 
-            else if(i != day)
-            {
-                Classes = classes.filter(function (el)
-                {
-                    return (el[3].includes(dayList[i]))
-                }); 
-            }
-            //note last index could be zero if this is a new day
-            for(let j = lastIndex; j<Classes.length; j++)
-            {
-                //latest class ending is zero if this is the start of a new day
-                if(!classes[j] in marked[day] && latestClassEnding <= Classes[j][1][0])
-                {
-                    //class order is a schedule in the making
-                    classOrder.push(classes[j].slice());
 
-                    //set the marked times
-                    for (let i =0;i<Classes.length; i++)
+            for(let j = index; j<Classes.length; j++)
+            {
+
+                let intersect = false
+
+                for(pair in marked[i])
+                {
+                    if(intersect([Classes[j][1], Classes[j][2]], pair))
                     {
-                        if(Classes[j][3].includes(char))
+                        intersect = true
+                    }
+                }
+
+
+                if(!intersect, latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
+                {
+                    classOrder.push(Classes[j]);
+                    classesAdded.add(Classes[j][0]);
+                    var temp = marked
+
+                    for (let k =0;k < 5; k++)
+                    {
+                        if(Classes[j].includes(["M", "T", "W", "R","F"][k]) && !(Classes[j] in marked[k]))
                         {
-                            marked[i].push(Classes[j])
+                            marked[k].push([Classes[j][1], Classes[j][2]])
                         }
                     }
 
                     if(j==Classes.length-1){
-                        expand(false, Classes, day+1, marked, className)
+                        expand(
+                            i+1, marked, 0, depth+1, maxDepth,
+                            0, classes, classesAdded, classOrder, schedules)
                     }
                     else
                     {
-                        expand(true, Classes, day, marked, className)
+                        expand(
+                            i, marked, index+1, depth+1, maxDepth,
+                            Classes[j][2][0]+Classes[j][2][1]/100.0, 
+                            classes, classesAdded, classOrder, schedules)
                     }
 
-
+                    marked = temp
                     classOrder.pop();
-
+                    classesAdded.delete(Classes[j][0]);
                 }
             }     
         }
     }
-
 }
 
-expand(false, 0, dayList, day)
+expand()

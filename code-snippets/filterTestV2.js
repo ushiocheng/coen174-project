@@ -110,14 +110,14 @@ function markedCopy(item1, item2)
 }
 
 
-function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay,classesAdded, classOrder,schedules)
+function expand(level, day, marked, index, nofClasses,  latestClassEnding, classesByDay,classesAdded, classOrder,schedules)
 {
     //all desired classes have been added
     if(classesAdded.size == nofClasses)
     {
         schedules.push(classOrder.slice());
     }
-    //the next day is saturday where there are no classes
+    //the day is saturday where there are no classes
     else if(day==5)
     {
         return
@@ -127,6 +127,7 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
         for (let i = day; i< 5; i++)
         {
             var Classes = classesByDay[i]
+
             for(let j = index; j<Classes.length; j++)
             {
                 let intersect = false
@@ -139,6 +140,20 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
                     }
                 }
 
+                //annotation
+                // console.log("classes added:")
+                // for(var item of classesAdded)
+                // {
+                //     console.log(item)
+                // }
+                // console.log("marked pairs:")
+                // for(let item of marked)
+                // {
+                //     console.log(item)
+                // }
+                // console.log("current class:")
+                // console.log(Classes[j])
+                //end annotation
 
                 if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
                 {
@@ -157,26 +172,27 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
                     //all the classes times on other days must be kept track of
                     for (let k =0;k < 5; k++)
                     {
-                        if(Classes[j][3].includes(["M", "T", "W", "R","F"][k]) && !([Classes[j][1], Classes[j][2]] in marked[k]))
+                        if(Classes[j][3].includes(["M", "T", "W", "R","F"][k]) && !([Classes[j][1].slice(), Classes[j][2].slice()] in marked[k]))
                         {
                             tempMarked[k].push([Classes[j][1].slice(), Classes[j][2].slice()])
                         }
                     }
 
                     if(j==Classes.length-1){
-                        expand(
+                        expand(level+1, 
                             i+1, tempMarked, 0, nofClasses,
                             0, classesByDay, tempClasses, tempOrder, schedules)
                     }
                     else
                     {
-                        expand(
+                        expand(level+1, 
                             i, tempMarked, index+1, nofClasses,
                             Classes[j][2][0]+Classes[j][2][1]/100.0, 
                             classesByDay, tempClasses, tempOrder, schedules)
                     }
                 }
             }     
+            index =0
         }
     }
 }
@@ -208,28 +224,64 @@ classesByDay.push(classes.filter(function (el)
 
 classesByDay.push(classes.filter(function (el)
 {
-    return (el[3].includes("T"))
+    let previous = false
+    for(var arr of classesByDay)
+    {
+        if(arr.includes(el))
+        {
+            previous = true
+        }
+    }
+    return (el[3].includes("T") && !previous)
 }))
 
 classesByDay.push(classes.filter(function (el)
 {
-    return (el[3].includes("W"))
+    let previous = false
+    for(var arr of classesByDay)
+    {
+        if(arr.includes(el))
+        {
+            previous = true
+        }
+    }
+    return (el[3].includes("W")&& !previous)
 })) 
 
 classesByDay.push(classes.filter(function (el)
 {
-    return (el[3].includes("R"))
+    let previous = false
+    for(var arr of classesByDay)
+    {
+        if(arr.includes(el))
+        {
+            previous = true
+        }
+    }
+    return (el[3].includes("R")&& !previous)
 }))
 
 classesByDay.push(classes.filter(function (el)
 {
-    return (el[3].includes("F"))
+    let previous = false
+    for(var arr of classesByDay)
+    {
+        if(arr.includes(el))
+        {
+            previous = true
+        }
+    }
+    return (el[3].includes("F")&& !previous)
 })) 
 
 
+// for (let i =0; i<classesByDay.length; i++)
+// {
+//     console.log(classesByDay[i])
+// }
 
 
-expand(0, marked, 0, 4, 0, classesByDay,classesAdded, classOrder,schedules)
+expand(0, 0, marked, 0, 4, 0, classesByDay,classesAdded, classOrder,schedules)
 
 
 for (let i =0; i<schedules.length; i++)
@@ -237,57 +289,3 @@ for (let i =0; i<schedules.length; i++)
     console.log(schedules[i])
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// for (let i = day; i< 5; i++)
-// {
-//     var Classes = classes.filter(function (el)
-//     {
-//         return (el[3].includes(["M","T","W","R","F"][i]))
-//     }); 
-//     // console.log(Classes)
-
-//     for(let j = index; j<Classes.length; j++)
-//     {
-//         let intersect = false
-//         for(let pair of marked[i])
-//         {
-//             if(findIntersect([Classes[j][1], Classes[j][2]], pair))
-//             {
-//                 intersect = true
-//             }
-//         }
-//         if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 
-//         && !classesAdded.has(Classes[j][0]))
-//         {
-//             classOrder.push(classes[j].slice());
-//             schedules.push(classOrder.slice());
-//             classOrder.pop();
-//         }
-//     }
-// }

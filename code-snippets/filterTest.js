@@ -1,7 +1,8 @@
+//this was the intial model that assumes all classes are on the same day
+//it does not take into account the idea that classes can be on the same time as long as
+//they are on different days
 
-//note: padding feature to implement minimum time between two classes
-//10 minute difference -> 5 minute padding for each class
-//branch names can be feature-...
+
 
 //sorting method by the starting time of a class
 function compareFn(a, b) {
@@ -64,7 +65,7 @@ function expand(depth, maxDepth, index, schedules, classesAdded, classes, classO
 //["MATH 6",[9,11]] and ["COEN 12",[10,12]] may not be added together
 
 
-classes = [
+let classes = [
     ["MATH 6",[9,11]], ["MATH 6",[10,12]], ["MATH 6",[13,15]],
     ["COEN 12",[9,11]], ["COEN 12",[9,11]], ["COEN 12",[14,16]],
     ["CSCI 53",[8,10]], ["CSCI 53",[17,19]], ["CSCI 53",[16, 18]]

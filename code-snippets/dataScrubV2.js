@@ -15,19 +15,6 @@ var filterData = data["results"].filter(function (el)
 
 var retList = []
 
-//time is only in hours:
-//Note that every class on course avail starts at times where the minute hand is...
-//divisble by 5
-// for (var item of filterData)
-// {
-//     let startTime = parseInt(item["c_hrstart"]) + (parseInt(item["c_mnstart"])/60.0)
-//     let endTime = startTime + (parseInt(item["c_duration"])/60.0)
-    
-//     retList.push([startTime, endTime, item["subject"]+" "+item["catalog_nbr"]])
-// }
-
-// console.log(retList)
-
 
 //time is a two part array: hour and minutes
 for (var item of filterData)
@@ -39,7 +26,7 @@ for (var item of filterData)
     let endTime = 
     [startTime[0]+ parseInt((parseInt(item["c_duration"])+startTime[1])/60), (startTime[1]+parseInt(item["c_duration"]))%60.0]
     
-    retList.push([startTime, endTime, item["subject"]+" "+item["catalog_nbr"]])
+    retList.push([item["subject"]+" "+item["catalog_nbr"], startTime, endTime, item["mtg_days_1"]])
 }
 
 console.log(retList)

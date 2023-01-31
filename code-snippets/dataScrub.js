@@ -1,3 +1,6 @@
+//old version of data scrub algorithm it takes the exact time in hours instead of using an hour minute format
+//it also does not acess the json data in the best way
+
 import { data} from './courseInformation.mjs';
 
 //this basic structure is use to filter out classes that have no time like independent study and phd classes
@@ -8,10 +11,6 @@ var filterData = data["results"].filter(function (el)
 );
 
 
-//suggestions:
-//use array map
-//use async
-//object oriented
 
 
 var retList = []

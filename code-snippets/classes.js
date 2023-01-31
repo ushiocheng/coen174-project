@@ -5,15 +5,23 @@
 class classes{
 
     constructor(rawJSON){
+      //the data only needs to be set once as a json with results
+      //then it can be used to populate scheduled and unScheduled
+      this.data = rawJSON
+      //every json entry is stored in one of the following
       this.scheduled  = []
       this.unScheduled = []
+
+
+      //josn data entries for all the classes added
       //these are sets in case the user...
       //adds the same class 2 or more times
       this.chosenScheduled = new Set()
       this.chosenUnScheduled = new Set()
-      //the data only needs to be set once as a json with results
-      //then it can be used to populate scheduled and unScheduled
-      this.data = rawJSON
+
+      //four simple things
+      //(subject+" "+catalog), (start time), (end time), and (days)
+      this.scheduleList = []
     }
   
     //all that seems to matter is data["results"]
@@ -67,13 +75,27 @@ class classes{
         }
     }
 
+
+    scrubScheduledClasses()
+    {
+        for (var item of Array.from(this.scheduled))
+        {
+            //[hour, min]:
+            let startTime = 
+            [parseInt(item["c_hrstart"]) , parseInt(item["c_mnstart"])]
+        
+            let endTime = 
+            [startTime[0]+ parseInt((parseInt(item["c_duration"])+startTime[1])/60), (startTime[1]+parseInt(item["c_duration"]))%60.0]
+            
+            this.scheduleList.push([item["subject"]+" "+item["catalog_nbr"], startTime, endTime, item["mtg_days_1"]])
+        }
+    }
+
   
+
     buildSchedules(){
-        //implement the data srub for this.chosenScheduled and the this.chosenUnScheduled
-
-
-        //implement the updated filter test function
-        //first convert the set this.chosenScheduled into a list with only starting time, ending time, and course name
+        //use filtered data with scrubScheduledClasses()
+        //implement filterTestV2.js
     }
 
   }

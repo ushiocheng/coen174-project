@@ -1,38 +1,21 @@
-//this does not work since a single class can have multiple days that they can
-//take place
-//what needs to be included is the string of days that the class takes place 
-//when being compared to another class a schedule conflict only takes place when
-//they share a day
-//so far the data has shown that most classes start at the same time regardless of 
-//what days they run
-
-//one thing that needs to be delt with is the required labs
-//should they be autoaticlly added (harder)
-//or should the user make the choice to put it into their schedule
-
-
+//this is the new model based on the old model of filterTest.js
+//it takes into account the idea that classes can be at the same time as long as
+//they are on different days
 
 //use "mtg_days_1" which tells the days that the classes take place
 //start by filtering all classes that have a monday start time
-//when a class has been chosen to start monday and it also takes place other days in "mtg_days_1"
-//then keep track of the times for those days as well
-//
+//when a class has been chosen to start monday and it may also take place other days 
+//keep track of the times for those days as well
 
 
+//todo:
+//one problem to adress is the required labs
+//should they be autoaticlly added (harder)
+//or should the user make the choice to put it into their schedule
+//^like normal course avail
 
 //note: padding feature to implement minimum time between two classes
-//10 minute difference -> 5 minute padding for each class
-
-
-//sort the first day by start times
-//add the first available class
-//then find the next available class
-//with a different class name and non conflictinf start time 
-//until there are no more available classes for the day
-//a list should be kept for each week day that shows classes already added that take up a time slot on that day
-//then the next day should be sorted by start times including the days a part of the already added list
-
-
+//10 minute difference -> 5 minute padding to the start and end of each class
 
 
 
@@ -45,7 +28,6 @@ function compareFn(a, b) {
     }
     return 0
 };
-
 
 
 
@@ -69,7 +51,7 @@ function findIntersect(p1, p2)
     return false
 }
 
-
+//beable to copy:
 //[['CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF'], ['CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF']]
 function orderCopy(item1, item2)
 {
@@ -92,6 +74,7 @@ function classesCopy(item1, item2)
     }
 }
 
+//beable to copy:
 //[[[[ 11, 45 ], [ 12, 50 ]], [[ 11, 45 ], [ 12, 50 ]]], [],[],[]]
 function markedCopy(item1, item2)
 {
@@ -110,7 +93,7 @@ function markedCopy(item1, item2)
 }
 
 
-function expand(level, day, marked, index, nofClasses,  latestClassEnding, classesByDay,classesAdded, classOrder,schedules)
+function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay,classesAdded, classOrder,schedules)
 {
     //all desired classes have been added
     if(classesAdded.size == nofClasses)
@@ -140,7 +123,7 @@ function expand(level, day, marked, index, nofClasses,  latestClassEnding, class
                     }
                 }
 
-                //annotation
+                //used for testing:
                 // console.log("classes added:")
                 // for(var item of classesAdded)
                 // {
@@ -153,7 +136,6 @@ function expand(level, day, marked, index, nofClasses,  latestClassEnding, class
                 // }
                 // console.log("current class:")
                 // console.log(Classes[j])
-                //end annotation
 
                 if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
                 {
@@ -170,6 +152,7 @@ function expand(level, day, marked, index, nofClasses,  latestClassEnding, class
                     tempClasses.add(Classes[j][0].slice());
     
                     //all the classes times on other days must be kept track of
+                    //when a class is added all of its class times are added
                     for (let k =0;k < 5; k++)
                     {
                         if(Classes[j][3].includes(["M", "T", "W", "R","F"][k]) && !([Classes[j][1].slice(), Classes[j][2].slice()] in marked[k]))
@@ -179,13 +162,13 @@ function expand(level, day, marked, index, nofClasses,  latestClassEnding, class
                     }
 
                     if(j==Classes.length-1){
-                        expand(level+1, 
+                        expand( 
                             i+1, tempMarked, 0, nofClasses,
                             0, classesByDay, tempClasses, tempOrder, schedules)
                     }
                     else
                     {
-                        expand(level+1, 
+                        expand( 
                             i, tempMarked, index+1, nofClasses,
                             Classes[j][2][0]+Classes[j][2][1]/100.0, 
                             classesByDay, tempClasses, tempOrder, schedules)
@@ -202,10 +185,11 @@ var classes = [
     [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
     [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
     [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
-    [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ]
+    [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
+    ['CSCI 144', [ 11, 45 ], [ 12, 50 ], 'MWF']
 ];
 
-
+let numberOfClasses = 5
 
 var marked = [[],[],[],[],[]]
 var classesAdded = new Set()
@@ -217,6 +201,8 @@ classes.sort(compareFn)
 var classesByDay = []
 
 
+
+//to avoid making the same schedule with a different order
 classesByDay.push(classes.filter(function (el)
 {
     return (el[3].includes("M"))
@@ -275,13 +261,8 @@ classesByDay.push(classes.filter(function (el)
 })) 
 
 
-// for (let i =0; i<classesByDay.length; i++)
-// {
-//     console.log(classesByDay[i])
-// }
 
-
-expand(0, 0, marked, 0, 4, 0, classesByDay,classesAdded, classOrder,schedules)
+expand(0, marked, 0, numberOfClasses, 0, classesByDay,classesAdded, classOrder,schedules)
 
 
 for (let i =0; i<schedules.length; i++)

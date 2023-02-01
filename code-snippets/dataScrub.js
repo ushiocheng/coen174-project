@@ -1,76 +1,112 @@
+//old version of data scrub algorithm it takes the exact time in hours instead of using an hour minute format
+//it also does not acess the json data in the best way
 
+import { data} from './courseInformation.mjs';
 
-
-
-const {data} = require('./jsonVar.js');
-console.log(data);
-
-
-//open("jsonData ")
-
-
-console.log(data)
-//console.log(jsonList);
-
-
-
-//this basic structure is use to filter out independent study an phd classes which have no time
-var newArray = jsonList.filter(function (el)
+//this basic structure is use to filter out classes that have no time like independent study and phd classes
+var filterData = data["results"].filter(function (el)
 {
   return el["mtg_time_beg_1"] !='' 
 }
 );
-//use array map
-//use async
-//object oriented
-
-//take previously
 
 
 
 
-//need to extract the class name and convert the class time to eurpoean times
+var retList = []
 
 
-retList = []
 
-//this may not be necessary
-//all that needs to be done is filter the array of jsons
-for(item in newArray)
+//Note that every class on course avail starts at times where the minute hand is...
+//divisble by 5
+for (var item of filterData)
 {
 
-    startTime = 0
-    endTime = 0  
-    
-    if(item["mtg_time_beg_1"].includes("pm"))
+    let startTime = 0
+    let endTime = 0  
+
+    if(item["mtg_time_beg_1"].includes("PM"))
     {
-        HourMin = item["mtg_time_beg_1"].split(":")
-        Hour = int(HourMin[0])
-        min = int(HourMin[1].split(" ")[0])
-        startTime = 12+Hour+(min/60) 
+        let hourMin = item["mtg_time_beg_1"].split(":")
+        let hour = parseInt(hourMin[0])
+        let min = parseInt(hourMin[1].split(" ")[0])
+
+        if(hour == 12){
+            startTime = 12+(min/60.0) 
+        }  
+        else
+        {
+            startTime = 12+hour+(min/60.0) 
+        }
     }
     else
     {
-        HourMin = item["mtg_time_beg_1"].split(":")
-        Hour = int(HourMin[0])
-        min = int(HourMin[1].split(" ")[0])
-        startTime = Hour+(min/60)
+        let hourMin = item["mtg_time_beg_1"].split(":")
+        let hour = parseInt(hourMin[0])
+        let min = parseInt(hourMin[1].split(" ")[0])
+        startTime = hour+(min/60.0)
     }
+
+
+
+
     if(item["mtg_time_end_1"].includes("pm"))
     {
-        HourMin = item["mtg_time_end_1"].split(":")
-        Hour = int(HourMin[0])
-        min = int(HourMin[1].split("p")[0])
-        endTime = 12+Hour+(min/60) 
+        let hourMin = item["mtg_time_end_1"].split(":")
+        if(hourMin.length==1)
+        {
+            endTime = parseInt(hourMin[0].split("p")[0])
+            if(endTime != 12)
+            {
+                endTime = 12+endTime
+            }
+        }
+        else
+        {
+            let hour = parseInt(hourMin[0])
+            let min = parseInt(hourMin[1].split("p")[0])
+            if(hour != 12)
+            {
+                endTime = 12+hour+(min/60.0)
+            }
+            else
+            {
+                endTime = 12+(min/60.0)
+            }
+        }
     }
     else
     {
-        HourMin = item["mtg_time_end_1"].split(":")
-        Hour = int(HourMin[0])
-        min = int(HourMin[1].split("a")[0])
-        endTime = Hour+(min/60)
+        let hourMin = item["mtg_time_end_1"].split(":")
+
+        if(hourMin.length == 1)
+        {
+
+            endTime = parseInt(hourMin[0].split("a")[0])
+            if(endTime == 12)
+            {
+                endTime = 0
+            }
+        }
+        else
+        {
+            let hour = parseInt(hourMin[0])
+            let min = parseInt(hourMin[1].split("a")[0])
+
+            if(hour != 12)
+            {
+                endTime = hour+(min/60.0)
+            }
+            else
+            {
+                endTime = (min/60.0)
+            }
+
+        }
     }
-    retList.push(startTime, endTime, item["subject"]+" "+item["catalog_nbr"] )
+    retList.push([startTime, endTime, item["subject"]+" "+item["catalog_nbr"]])
 }
 
-print(retList)
+console.log(retList)
+
+

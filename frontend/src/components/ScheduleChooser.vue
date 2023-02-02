@@ -1,13 +1,14 @@
 <template>
-  
+  <schedule-viewer />
+  <schedule-viewer-control />
 </template>
 
 <script>
+import ScheduleViewer from "./schedule-chooser-components/ScheduleViewer.vue";
+import ScheduleViewerControl from "./schedule-chooser-components/ScheduleViewerControl.vue";
 export default {
-
-}
+  components: { ScheduleViewer, ScheduleViewerControl },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

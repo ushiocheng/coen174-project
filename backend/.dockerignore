@@ -1,4 +1,15 @@
-node_modules
+# build output (ignored so that the latest code is used)
+dist
 
-# lockfile
-*.lock
+# ! node_modules and yarn.lock on host is reused to reduce build time, uncomment the following 2 line if you don't want this behavior
+# *.lock
+# node_modules
+
+# ignore npm lock file since yarn would fail when npm lock file are detected
+package-lock.json
+
+# Development only files
+.dockerignore
+.gitignore
+Dockerfile
+nodemon.json

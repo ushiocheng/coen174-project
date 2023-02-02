@@ -1,11 +1,11 @@
 
 import {data} from './courseInformation.mjs'
-import {expand, compareFn} from './filterTestV2.js'
+import {expand, compareFn, createClassesByDay} from './utility.js'
 
 //should there be a limit to the amount of units to take?
 //can there be no cap on the number of classes with no schedule
 
-class classes{
+class Course{
 
     constructor(rawJSON){
       //the data only needs to be set once as a json with results
@@ -31,8 +31,6 @@ class classes{
       //four simple things
       //(subject+" "+catalog), (start time), (end time), and (days)
       this.classList = []
-
-
       //the list of working schedules produced by build schedules
       this.scheduleList = []
     }
@@ -118,115 +116,44 @@ class classes{
   }
 
 
-  buildSchedules()
-{
 
-    var Classes = Array.from(this.classList)
-    // var classes = [
-    //     [ 'CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF' ],
-    //     [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
-    //     [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
-    //     [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
-    //     [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
-    //     ['CSCI 144', [ 11, 45 ], [ 12, 50 ], 'MWF']
-    // ];
-    
-    let numberOfClasses = 5
+  popClassesByDay()
+  {
+    this.classesByDay
+  }
+
+  buildSchedules()
+  {
     
     var marked = [[],[],[],[],[]]
     var classesAdded = new Set()
-    var classOrder = []
-    var schedules = []
-    
-    
-    Classes.sort(compareFn)
+
+    this.classList.sort(compareFn)
     var classesByDay = []
     
-    
+    createClassesByDay(classesByDay, this.classList)
     
     //to avoid making the same schedule with a different order
-    classesByDay.push(Classes.filter(function (el)
-    {
-        return (el[3].includes("M"))
-    }))
-    
-    classesByDay.push(Classes.filter(function (el)
-    {
-        let previous = false
-        for(var arr of classesByDay)
-        {
-            if(arr.includes(el))
-            {
-                previous = true
-            }
-        }
-        return (el[3].includes("T") && !previous)
-    }))
-    
-    classesByDay.push(Classes.filter(function (el)
-    {
-        let previous = false
-        for(var arr of classesByDay)
-        {
-            if(arr.includes(el))
-            {
-                previous = true
-            }
-        }
-        return (el[3].includes("W")&& !previous)
-    })) 
-    
-    classesByDay.push(Classes.filter(function (el)
-    {
-        let previous = false
-        for(var arr of classesByDay)
-        {
-            if(arr.includes(el))
-            {
-                previous = true
-            }
-        }
-        return (el[3].includes("R")&& !previous)
-    }))
-    
-    classesByDay.push(Classes.filter(function (el)
-    {
-        let previous = false
-        for(var arr of classesByDay)
-        {
-            if(arr.includes(el))
-            {
-                previous = true
-            }
-        }
-        return (el[3].includes("F")&& !previous)
-    })) 
-    
 
+    expand(0, marked, 0, this.unique.size, 0, classesByDay,classesAdded, [],this.scheduleList);
 
-
-    expand(0, marked, 0, this.unique.size, 0, classesByDay,classesAdded, classOrder,schedules);
-
-    this.scheduleList = schedules
-
-
-}
+  }
 
 //read and set the json varaible from the course infomration.mjs
 //select a few chosen classes
 
 }
 
-var courses = new classes(data)
-courses.popScheduled()
-courses.selectChosen("ACTG 131")
-console.log(courses.unique)
-courses.selectChosen("ACTG 136")
-courses.selectChosen("AMTH 106")
-courses.selectChosen("AMTH 108")
+var courseData = new Course(data)
+courseData.popScheduled()
+courseData.selectChosen("ACTG 131")
+console.log(courseData.unique)
+courseData.selectChosen("ACTG 136")
+courseData.selectChosen("AMTH 106")
+courseData.selectChosen("AMTH 108")
 
-courses.scrubScheduledClasses()
-courses.buildSchedules()
+courseData.scrubScheduledClasses()
+courseData.buildSchedules()
 
 
 //classes that are scheduled and part of the
@@ -238,13 +165,13 @@ courses.buildSchedules()
 //changed when calling select chosen
 
 // //all jsons for all class times for all class names the user wants
-console.log(courses.chosenScheduled)
+console.log(courseData.chosenScheduled)
 // // //all the class time that have a name from chosenScheduled
-console.log(courses.classList)
+console.log(courseData.classList)
 // // //all the cobinations of wokring schedules
 
 
-for(let item of courses.scheduleList)
+for(let item of courseData.scheduleList)
 {
     console.log(item)
 }

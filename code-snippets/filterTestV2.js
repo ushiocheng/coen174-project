@@ -16,8 +16,7 @@
 
 //note: padding feature to implement minimum time between two classes
 //10 minute difference -> 5 minute padding to the start and end of each class
-
-
+import {data} from './courseInformation.mjs'
 
 function compareFn(a, b) {
     if (a[1][0]+a[1][1]/100.0 < b[1][0]+b[1][1]/100.0) {
@@ -180,93 +179,190 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
     }
 }
 
-var classes = [
-    [ 'CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF' ],
-    [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
-    [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
-    [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
-    [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
-    ['CSCI 144', [ 11, 45 ], [ 12, 50 ], 'MWF']
-];
+// var classes = [
+//     [ 'CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF' ],
+//     [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
+//     [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
+//     [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
+//     [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
+//     ['CSCI 144', [ 11, 45 ], [ 12, 50 ], 'MWF']
+// ];
 
-let numberOfClasses = 5
+// let numberOfClasses = 5
 
-var marked = [[],[],[],[],[]]
-var classesAdded = new Set()
-var classOrder = []
-var schedules = []
+// var marked = [[],[],[],[],[]]
+// var classesAdded = new Set()
+// var classOrder = []
+// var schedules = []
 
 
-classes.sort(compareFn)
-var classesByDay = []
+// // classes.sort(compareFn)
+// var classesByDay = []
 
 
 
 //to avoid making the same schedule with a different order
-classesByDay.push(classes.filter(function (el)
-{
-    return (el[3].includes("M"))
-}))
+// classesByDay.push(classes.filter(function (el)
+// {
+//     return (el[3].includes("M"))
+// }))
 
-classesByDay.push(classes.filter(function (el)
-{
-    let previous = false
-    for(var arr of classesByDay)
-    {
-        if(arr.includes(el))
-        {
-            previous = true
-        }
-    }
-    return (el[3].includes("T") && !previous)
-}))
+// classesByDay.push(classes.filter(function (el)
+// {
+//     let previous = false
+//     for(var arr of classesByDay)
+//     {
+//         if(arr.includes(el))
+//         {
+//             previous = true
+//         }
+//     }
+//     return (el[3].includes("T") && !previous)
+// }))
 
-classesByDay.push(classes.filter(function (el)
-{
-    let previous = false
-    for(var arr of classesByDay)
-    {
-        if(arr.includes(el))
-        {
-            previous = true
-        }
-    }
-    return (el[3].includes("W")&& !previous)
-})) 
+// classesByDay.push(classes.filter(function (el)
+// {
+//     let previous = false
+//     for(var arr of classesByDay)
+//     {
+//         if(arr.includes(el))
+//         {
+//             previous = true
+//         }
+//     }
+//     return (el[3].includes("W")&& !previous)
+// })) 
 
-classesByDay.push(classes.filter(function (el)
-{
-    let previous = false
-    for(var arr of classesByDay)
-    {
-        if(arr.includes(el))
-        {
-            previous = true
-        }
-    }
-    return (el[3].includes("R")&& !previous)
-}))
+// classesByDay.push(classes.filter(function (el)
+// {
+//     let previous = false
+//     for(var arr of classesByDay)
+//     {
+//         if(arr.includes(el))
+//         {
+//             previous = true
+//         }
+//     }
+//     return (el[3].includes("R")&& !previous)
+// }))
 
-classesByDay.push(classes.filter(function (el)
-{
-    let previous = false
-    for(var arr of classesByDay)
-    {
-        if(arr.includes(el))
-        {
-            previous = true
-        }
-    }
-    return (el[3].includes("F")&& !previous)
-})) 
-
-
-
-expand(0, marked, 0, numberOfClasses, 0, classesByDay,classesAdded, classOrder,schedules)
+// classesByDay.push(classes.filter(function (el)
+// {
+//     let previous = false
+//     for(var arr of classesByDay)
+//     {
+//         if(arr.includes(el))
+//         {
+//             previous = true
+//         }
+//     }
+//     return (el[3].includes("F")&& !previous)
+// })) 
 
 
-for (let i =0; i<schedules.length; i++)
-{
-    console.log(schedules[i])
-}
 
+// expand(0, marked, 0, numberOfClasses, 0, classesByDay,classesAdded, classOrder,schedules)
+
+
+// for (let i =0; i<schedules.length; i++)
+// {
+//     console.log(schedules[i])
+// }
+
+
+
+// classes  = function buildSchedules()
+// {
+
+//     var Classes = Array.from(this.classList)
+//     // var classes = [
+//     //     [ 'CSCI 183', [ 8, 45 ], [ 9, 50 ], 'MWF' ],
+//     //     [ 'COEN 174', [ 10, 20 ], [ 12, 0], 'TR' ],
+//     //     [ 'COEN 174L', [ 14, 15 ], [ 17, 0 ], 'W' ],
+//     //     [ 'HIST 33', [ 14, 0 ], [ 15, 40 ], 'TR' ],  
+//     //     [ 'CSCI 183', [ 11, 45 ], [ 12, 50 ], 'MWF' ],
+//     //     ['CSCI 144', [ 11, 45 ], [ 12, 50 ], 'MWF']
+//     // ];
+    
+//     let numberOfClasses = 5
+    
+//     var marked = [[],[],[],[],[]]
+//     var classesAdded = new Set()
+//     var classOrder = []
+//     var schedules = []
+    
+    
+//     Classes.sort(compareFn)
+//     var classesByDay = []
+    
+    
+    
+//     //to avoid making the same schedule with a different order
+//     classesByDay.push(Classes.filter(function (el)
+//     {
+//         return (el[3].includes("M"))
+//     }))
+    
+//     classesByDay.push(Classes.filter(function (el)
+//     {
+//         let previous = false
+//         for(var arr of classesByDay)
+//         {
+//             if(arr.includes(el))
+//             {
+//                 previous = true
+//             }
+//         }
+//         return (el[3].includes("T") && !previous)
+//     }))
+    
+//     classesByDay.push(Classes.filter(function (el)
+//     {
+//         let previous = false
+//         for(var arr of classesByDay)
+//         {
+//             if(arr.includes(el))
+//             {
+//                 previous = true
+//             }
+//         }
+//         return (el[3].includes("W")&& !previous)
+//     })) 
+    
+//     classesByDay.push(Classes.filter(function (el)
+//     {
+//         let previous = false
+//         for(var arr of classesByDay)
+//         {
+//             if(arr.includes(el))
+//             {
+//                 previous = true
+//             }
+//         }
+//         return (el[3].includes("R")&& !previous)
+//     }))
+    
+//     classesByDay.push(Classes.filter(function (el)
+//     {
+//         let previous = false
+//         for(var arr of classesByDay)
+//         {
+//             if(arr.includes(el))
+//             {
+//                 previous = true
+//             }
+//         }
+//         return (el[3].includes("F")&& !previous)
+//     })) 
+    
+
+
+
+//     expand(0, marked, 0, this.chosenUnScheduled.size, 0, classesByDay,classesAdded, classOrder,schedules);
+
+//     this.scheduleList = schedules
+
+
+// }
+
+export {compareFn, expand};

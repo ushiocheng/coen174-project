@@ -50,7 +50,6 @@ export default class CARequest {
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
   }
 
-  /* Returns a list of all the sections that match the query */
   async getSearchResults(query: string) {
     let response = await fetch(
       `/courseavail/search/${this.activeQuarterID}/ugrad/${query}`
@@ -60,8 +59,6 @@ export default class CARequest {
     return queryMatches;
   }
 
-  /*  Returns a list of the quarters and their courseavail ids
-      Use this function to populate the quarter selection dropdown menu */
   async getCourseList() {
     let response = await fetch(
       `/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`

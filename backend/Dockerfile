@@ -6,8 +6,9 @@ WORKDIR /usr/src/app
 # copy over everything except ones in .dockerignore
 COPY . .
 
-RUN npm install --production
+RUN yarn install
+RUN yarn run build
 
 EXPOSE 60180
 
-CMD [ "node", "src/app.js" ]
+CMD [ "node", "."]

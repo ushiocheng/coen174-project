@@ -1,5 +1,5 @@
 
-import {expand, compareFn, createClassesByDay} from './utility.js';
+import {expand, compareFn, createSectionsByDay} from './utility.js';
 import {Course} from './Course.ts';
 import {CARequest} from './CARequest.ts';
 import {Section} from "./Section.ts"
@@ -11,9 +11,10 @@ class Scheduler{
 
     constructor(){
 
-      //both of these are loaded complete when the page loads
+      //this is not being used
       this.jsonList = []
-      //this is a hash table that maps course string (coen 12) to course object
+
+      //this is a hash table that maps course string like "COEN 12" to course object
       this.scheduledCourses = new Map(String, Course);
 
       //a list of classes that arent scheduled
@@ -31,7 +32,8 @@ class Scheduler{
       //this.allSections = new Array()
 
    
-      //list of working schedules
+      //list of working schedules 
+      //list of list of sectiond
       this.scheduleList = new Array()
     }
 
@@ -149,11 +151,11 @@ class Scheduler{
 
     allSections.sort(compareFn)
 
-    var classesByDay = new Array()
-    createClassesByDay(classesByDay, allSections)
+    var sectionsByDay = new Array()
+    createSectionsByDay(sectionsByDay, allSections)
     
 
-    expand(0, marked, 0, this.selectedCourses.size, 0, classesByDay,classesAdded, [],this.scheduleList);
+    expand(0, marked, 0, this.selectedCourses.size, 0, sectionsByDay,classesAdded, [],this.scheduleList);
 
   }
 

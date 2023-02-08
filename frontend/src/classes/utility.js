@@ -1,9 +1,9 @@
 
-function createClassesByDay(classesByDay, allSections)
+function createSectionsByDay(sectionsByDay, allSections)
 {
     //can this be improved???
-
-    classesByDay.push(allSections.filter(function (item, index)
+    //need to test on dummy data to see if it works
+    sectionsByDay.push(allSections.filter(function (item, index)
     {
         let temp = item.haveClassIn[0]
         if(temp)
@@ -13,7 +13,7 @@ function createClassesByDay(classesByDay, allSections)
         return (temp)
     }))
 
-    classesByDay.push(allSections.filter(function (item, index)
+    sectionsByDay.push(allSections.filter(function (item, index)
     {
         let temp = item.haveClassIn[1]
         if(temp)
@@ -23,7 +23,7 @@ function createClassesByDay(classesByDay, allSections)
         return (temp)
     }))
 
-    classesByDay.push(allSections.filter(function (item, index)
+    sectionsByDay.push(allSections.filter(function (item, index)
     {
         let temp = item.haveClassIn[2]
         if(temp)
@@ -33,7 +33,7 @@ function createClassesByDay(classesByDay, allSections)
         return (temp)
     })) 
 
-    classesByDay.push(allSections.filter(function (item, index)
+    sectionsByDay.push(allSections.filter(function (item, index)
     {
         let temp = item.haveClassIn[3]
         if(temp)
@@ -43,7 +43,7 @@ function createClassesByDay(classesByDay, allSections)
         return (temp)
     }))
 
-    classesByDay.push(allSections.filter(function (item, index)
+    sectionsByDay.push(allSections.filter(function (item, index)
     {
         let temp = item.haveClassIn[4]
         if(temp)
@@ -86,51 +86,49 @@ function findIntersect(s1, s2)
 }
 
 
-function orderCopy(item1, item2)
+function sectionListCopy(l1, l2)
 {
-    for(let i =0; i<item1.length; i++)
+    for(let i =0 ; i<l1.size(); i++)
     {
-        item2.push([])
-        for(let j =0; j<4; j++)
-        {
-            item2[i].push(item1[i][j])
-        }
+        l2[i].subject = l1[i].subject
+        l2[i].catalog_nbr = l1[i].catalog_nbr
+        l2[i].haveClassIn = l1[i].haveClassIn
+        l2[i].startTime = l1[i].startTime
+        l2[i].endTime = l1[i].endTime
     }
 }
 
 
-function classesCopy(item1, item2)
+function classesCopy(s1, s2)
 {
-    for(let item of item1)
+    for(let item of s1)
     {
-        item2.add(item)
+        s2.add(item)
     }
 }
 
 
-function markedCopy(item1, item2)
+function markedCopy(l1, l2)
 {
     for(let i =0; i<5; i++)
     {
-        item2.push([])
-        for(let j =0; j<item1[i].length; j++)
+        l2.push([])
+        for(let j =0; j<l1[i].length; j++)
         {
-            item2[i].push([])
-            for(let k =0; k<2; k++)
-            {
-                item2[i][j].push(item1[i][j][k])
-            }
+            l2[i].push([])
+            l2[i][j].push(l1[i][j][0])
+            l2[i][j].push(l1[i][j][1])
         }
     }
 }
 
 
-function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay,classesAdded, classOrder,schedules)
+function expand(day, marked, index, nofClasses,  latestClassEnding, sectionsByDay,classesAdded, classOrder,schedules)
 {
     //all desired classes have been added
     if(classesAdded.size == nofClasses)
     {
-        schedules.push(classOrder.slice());
+        schedules.push(classOrder);
     }
     //the day is saturday where there are no classes
     else if(day==5)
@@ -141,56 +139,60 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
     {
         for (let i = day; i< 5; i++)
         {
-            var Classes = classesByDay[i]
+            var sections = sectionsByDay[i]
 
-            for(let j = index; j<Classes.length; j++)
+            for(let j = index; j<sections.length; j++)
             {
                 let intersect = false
 
                 for(let pair of marked[i])
                 {
-                    if(findIntersect([Classes[j][1], Classes[j][2]], pair))
+                    if(findIntersect([sections[j][1], sections[j][2]], pair))
                     {
                         intersect = true
                     }
                 }
 
 
-                if(!intersect && latestClassEnding <= Classes[j][1][0]+Classes[j][1][1]/100.0 && !classesAdded.has(Classes[j][0]))
+                if(!intersect && latestClassEnding <= sections[j].startTime 
+                    && 
+                !classesAdded.has(sections[j].subject+sections[j].catalog_nbr))
                 {
 
                     var tempOrder = []
                     var tempClasses  = new Set()
+                    //array of taken up starttimes and endtimes
+                    //which are in data format
                     var tempMarked = []
 
-                    orderCopy(classOrder, tempOrder)
+                    sectionListCopy(classOrder, tempOrder)
                     classesCopy(classesAdded, tempClasses)
                     markedCopy(marked, tempMarked)
 
-                    tempOrder.push(Classes[j].slice());
-                    tempClasses.add(Classes[j][0].slice());
+                    tempOrder.push(sections[j]);      
+                    tempClasses.add(sections[j].subject+sections[j].catalog_nbr);
     
                     //all the classes times on other days must be kept track of
                     //when a class is added all of its class times are added
                     for (let k =0;k < 5; k++)
                     {
-                        if(Classes[j][3].includes(["M", "T", "W", "R","F"][k]) && !([Classes[j][1].slice(), Classes[j][2].slice()] in marked[k]))
+                        if(sections[j].haveClassIn[k] && !([sections[j].startTime, sections[j].endTime] in marked[k]))
                         {
-                            tempMarked[k].push([Classes[j][1].slice(), Classes[j][2].slice()])
+                            tempMarked[k].push([sections[j].startTime, sections[j].endTime])
                         }
                     }
 
-                    if(j==Classes.length-1){
+                    if(j==sections.length-1){
                         expand( 
                             i+1, tempMarked, 0, nofClasses,
-                            0, classesByDay, tempClasses, tempOrder, schedules)
+                            0, sectionsByDay, tempClasses, tempOrder, schedules)
                     }
                     else
                     {
                         expand( 
                             i, tempMarked, index+1, nofClasses,
-                            Classes[j][2][0]+Classes[j][2][1]/100.0, 
-                            classesByDay, tempClasses, tempOrder, schedules)
+                            sections[j].endTime, 
+                            sectionsByDay, tempClasses, tempOrder, schedules)
                     }
                 }
             }     
@@ -199,4 +201,4 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
     }
 }
 
-export {compareFn, expand, createClassesByDay};
+export {compareFn, expand, createSectionsByDay};

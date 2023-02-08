@@ -165,7 +165,7 @@ class Scheduler{
     allSections.sort(compareFn)
 
     var sectionsByDay = new Array()
-    createSectionsByDay(sectionsByDay, allSections)
+    createSectionsByDay(sectionsByDay, allSections.slice())
     
 
     expand(0, marked, 0, this.selectedCourses.size, 0, sectionsByDay,classesAdded, [],this.scheduleList);

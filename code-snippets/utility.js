@@ -18,7 +18,7 @@ function createClassesByDayNew(classesByDay, classList)
     newArr = []
     classesByDay.push(classList.filter(function (el)
     {
-        if(el[3].includes("M"))
+        if(el[3].includes("T"))
         {
             return true
         }
@@ -32,7 +32,7 @@ function createClassesByDayNew(classesByDay, classList)
     newArr = []
     classesByDay.push(classList.filter(function (el)
     {
-        if(el[3].includes("M"))
+        if(el[3].includes("W"))
         {
             return true
         }
@@ -46,7 +46,7 @@ function createClassesByDayNew(classesByDay, classList)
     newArr = []
     classesByDay.push(classList.filter(function (el)
     {
-        if(el[3].includes("M"))
+        if(el[3].includes("R"))
         {
             return true
         }
@@ -60,7 +60,7 @@ function createClassesByDayNew(classesByDay, classList)
     newArr = []
     classesByDay.push(classList.filter(function (el)
     {
-        if(el[3].includes("M"))
+        if(el[3].includes("F"))
         {
             return true
         }

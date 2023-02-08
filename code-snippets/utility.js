@@ -1,4 +1,78 @@
 
+function createClassesByDayNew(classesByDay, classList)
+{
+    let newArr = []
+    classesByDay.push(classList.filter(function (el)
+    {
+        if(el[3].includes("M"))
+        {
+            return true
+        }
+        else
+        {
+            newArr.push(el)
+            return false
+        }
+    }))
+    classList = newArr
+    newArr = []
+    classesByDay.push(classList.filter(function (el)
+    {
+        if(el[3].includes("M"))
+        {
+            return true
+        }
+        else
+        {
+            newArr.push(el)
+            return false
+        }
+    }))
+    classList = newArr
+    newArr = []
+    classesByDay.push(classList.filter(function (el)
+    {
+        if(el[3].includes("M"))
+        {
+            return true
+        }
+        else
+        {
+            newArr.push(el)
+            return false
+        }
+    }))
+    classList = newArr
+    newArr = []
+    classesByDay.push(classList.filter(function (el)
+    {
+        if(el[3].includes("M"))
+        {
+            return true
+        }
+        else
+        {
+            newArr.push(el)
+            return false
+        }
+    }))
+    classList = newArr
+    newArr = []
+    classesByDay.push(classList.filter(function (el)
+    {
+        if(el[3].includes("M"))
+        {
+            return true
+        }
+        else
+        {
+            newArr.push(el)
+            return false
+        }
+    }))
+}
+
+
 function createClassesByDay(classesByDay, classList)
 {
     classesByDay.push(classList.filter(function (el)
@@ -208,4 +282,4 @@ function expand(day, marked, index, nofClasses,  latestClassEnding, classesByDay
     }
 }
 
-export {compareFn, expand, createClassesByDay};
+export {compareFn, expand, createClassesByDay, createClassesByDayNew};

@@ -1,6 +1,6 @@
 
 import {data} from './courseInformation.mjs'
-import {expand, compareFn, createClassesByDay} from './utility.js'
+import {expand, compareFn, createClassesByDay, createClassesByDayNew} from './utility.js'
 
 //should there be a limit to the amount of units to take?
 //can there be no cap on the number of classes with no schedule
@@ -88,7 +88,6 @@ class Course{
             return "No Matches"
         }
 
-        console.log(this.chosenScheduled)
     }
 
 
@@ -131,7 +130,7 @@ class Course{
     this.classList.sort(compareFn)
     var classesByDay = []
     
-    createClassesByDay(classesByDay, this.classList)
+    createClassesByDayNew(classesByDay, this.classList.slice())
     
     //to avoid making the same schedule with a different order
 
@@ -147,7 +146,7 @@ class Course{
 var courseData = new Course(data)
 courseData.popScheduled()
 courseData.selectChosen("ACTG 131")
-console.log(courseData.unique)
+//console.log(courseData.unique)
 courseData.selectChosen("ACTG 136")
 courseData.selectChosen("AMTH 106")
 courseData.selectChosen("AMTH 108")
@@ -165,9 +164,9 @@ courseData.buildSchedules()
 //changed when calling select chosen
 
 // //all jsons for all class times for all class names the user wants
-console.log(courseData.chosenScheduled)
+//console.log(courseData.chosenScheduled)
 // // //all the class time that have a name from chosenScheduled
-console.log(courseData.classList)
+//console.log(courseData.classList)
 // // //all the cobinations of wokring schedules
 
 

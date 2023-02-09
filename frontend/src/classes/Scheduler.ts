@@ -2,7 +2,6 @@ import { expand, compareFn, createSectionsByDay } from "./utility";
 import Course from "./Course";
 import CARequest from "./CARequest";
 import Section from "./Section";
-import { connect } from "http2";
 
 //should there be a limit to the amount of units to take?
 //can there be no cap on the number of classes with no schedule
@@ -42,7 +41,9 @@ export default class Scheduler {
     this.scheduleList = new Array();
   }
 
-  //change the active quarter
+  /** Switches the quarter that will be used for course searches and
+   *  schedule generation.
+   */
   changeQuarter(quarterId: string) {
     this.requester.setActiveQuarter(quarterId);
   }
@@ -69,28 +70,18 @@ export default class Scheduler {
     } else if (!this.classList.includes(courseString)) {
       return "Not a valid Course";
     } else {
-      console.log(courseString);
-      let courseSections = await this.requester.getSearchResults(
-        courseString.slice()
-      );
-      console.log(courseString);
+      let courseSections = await this.requester.getSearchResults(courseString);
       let pair: Array<string> = [];
-      try {
-        pair = courseString.split(" ");
-      } catch (error) {
-        console.log(error);
-      }
-      console.log(pair);
+      pair = courseString.split(" ", 2);
       //if the class has no schedule
-      if (courseSections[0]["c_hrstart"] == "" && courseSections.length === 1) {
+      if (courseSections[0]["c_hrstart"] == "" && courseSections.length == 1) {
         //if class is unscheduled
         let courseObj = new Course(pair[0], pair[1]);
         this.unScheduledCourses.add(courseObj);
       } else {
-        console.log("created objs");
         let courseObj = new Course(pair[0], pair[1]);
         let item: any;
-        for (item in courseSections) {
+        for (item of courseSections) {
           let section = new Section(
             courseObj,
             item["class_nbr"],
@@ -103,21 +94,19 @@ export default class Scheduler {
           );
           courseObj.sections.push(section);
         }
-        console.log("done");
         this.selectedCourses.set(courseString, courseObj);
       }
     }
   }
 
-  //direct user input
-  removeCourse(courseString: string) {
-    //need to check for validity
-
-    if (this.selectedCourses.has(courseString)) {
-      this.selectedCourses.delete(courseString);
-    } else {
-      return "course not found";
-    }
+  /**
+   * Removes courseString from list of selected courses
+   *
+   * @returns - true if the course is in the list and has been removed
+   *          - false otherwise
+   */
+  removeCourse(courseString: string): boolean {
+    return this.selectedCourses.delete(courseString);
   }
 
   // filterScheduled()
@@ -133,6 +122,9 @@ export default class Scheduler {
   //     });
   // }
 
+  /** Generates all possible schedules based on courses in selectedCourses.
+   *  - Stored results in scheduleList
+   */
   buildSchedules() {
     var marked = [[], [], [], [], []];
     var classesAdded: Set<string> = new Set();
@@ -146,7 +138,8 @@ export default class Scheduler {
 
     var sectionsByDay = new Array();
     createSectionsByDay(sectionsByDay, allSections);
-
+    console.log(allSections);
+    console.log(sectionsByDay);
     expand(
       0,
       marked,

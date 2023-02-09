@@ -71,7 +71,56 @@ export default class CARequest {
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
   }
 
-  async getSearchResults(query: string): Promise<Array<any>> {
+  async getSearchResults(query: string): Promise<
+    Array<{
+      term: string;
+      strm_descr: string;
+      subject: string;
+      subject_descr: string;
+      catalog_nbr: string;
+      class_nbr: string;
+      class_descr: string;
+      mtg_days_1: string;
+      mtg_time_beg_hr_1: string;
+      mtg_time_beg_1: string;
+      mtg_time_end_1: string;
+      ctype: string;
+      mtg_facility_1: string;
+      instr_1: string;
+      instr_2: string;
+      instr_3: string;
+      mtg_days_2: string;
+      mtg_time_beg_2: string;
+      mtg_time_end_2: string;
+      mtg_facility_2: string;
+      seats_remaining: string;
+      topic: string;
+      units_minimum: string;
+      units_maximum: string;
+      session: string;
+      loc_id: string;
+      lat: string;
+      long: string;
+      l_cname: string;
+      l_img: string;
+      l_name: string;
+      l_flr: string;
+      l_flcid: string;
+      strm_abbr: string;
+      instr_1_sh: string;
+      instr_2_sh: string;
+      time1_fr: string;
+      c_hrstart: string;
+      c_mnstart: string;
+      c_duration: number;
+      c_hrstart2: string;
+      c_mnstart2: string;
+      c_duration2: string;
+      time2_fr: string;
+      seats_text: string;
+      has_seats: number;
+    }>
+  > {
     // Request query results from courseavail
     try {
       let response = await fetch(

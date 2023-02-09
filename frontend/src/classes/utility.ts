@@ -16,17 +16,15 @@ function createSectionsByDay(
 
   for (let i = 0; i < 5; i++) {
     let sectionsForTheDay: Array<Section> = [];
-    allSections.forEach((item, index) => {
+    for (let j = 0; j < allSections.length; j++) {
+      let item = allSections[j];
       if (item.haveClassIn[`${days[i]}` as keyof dayList]) {
         sectionsForTheDay.push(item);
-        allSections.splice(index, 1);
+        allSections.splice(j, 1);
+        j--;
       }
-    });
-    sectionsByDay.push(
-      sectionsForTheDay
-
-      //   allSections.filter((item: Section) => item.haveClassIn[`${days[i]}`])
-    );
+    }
+    sectionsByDay.push(sectionsForTheDay);
   }
 }
 

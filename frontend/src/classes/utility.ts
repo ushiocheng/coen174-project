@@ -1,17 +1,36 @@
 import Section from "./Section";
-import Course from "./Course";
 
-function createSectionsByDay(sectionsByDay, allSections: Map<string, Section>) {
+function createSectionsByDay(
+  sectionsByDay: Array<Array<Section>>,
+  allSections: Array<Section>
+) {
+  interface dayList {
+    M: string;
+    T: string;
+    W: string;
+    R: string;
+    F: string;
+  }
   //need to test on dummy data to see if it works
   let days = ["M", "T", "W", "R", "F"];
+
   for (let i = 0; i < 5; i++) {
+    let sectionsForTheDay: Array<Section> = [];
+    allSections.forEach((item, index) => {
+      if (item.haveClassIn[`${days[i]}` as keyof dayList]) {
+        sectionsForTheDay.push(item);
+        allSections.splice(index, 1);
+      }
+    });
     sectionsByDay.push(
-      allSections.filter((item) => item.haveClassIn[`${days[i]}`])
+      sectionsForTheDay
+
+      //   allSections.filter((item: Section) => item.haveClassIn[`${days[i]}`])
     );
   }
 }
 
-function compareFn(s1, s2) {
+function compareFn(s1: any, s2: any) {
   if (s1.startTime < s2.startTime) {
     return -1;
   } else if (s1.startTime > s2.startTime) {
@@ -20,11 +39,11 @@ function compareFn(s1, s2) {
   return 0;
 }
 
-function findIntersect(s1, s2) {
-  if (s1.startTime < s2.startTime && s1.endTIme > s2.startTime) {
+function findIntersect(s1: Section, s2: { startTime: Date; endTime: Date }) {
+  if (s1.startTime < s2.startTime && s1.endTime > s2.startTime) {
     return true;
   }
-  if (s2.startTime < s1.startTime && s2.endTIme > s1.startTime) {
+  if (s2.startTime < s1.startTime && s2.endTime > s1.startTime) {
     return true;
   }
 
@@ -41,13 +60,13 @@ function findIntersect(s1, s2) {
 //   }
 // }
 
-function classesCopy(s1, s2) {
+function classesCopy(s1: any, s2: any) {
   for (let item of s1) {
     s2.add(item);
   }
 }
 
-function markedCopy(l1, l2) {
+function markedCopy(l1: any, l2: any) {
   for (let i = 0; i < 5; i++) {
     l2.push([]);
     for (let j = 0; j < l1[i].length; j++) {
@@ -59,16 +78,25 @@ function markedCopy(l1, l2) {
 }
 
 function expand(
-  day,
-  marked,
-  index,
-  nofClasses,
-  latestClassEnding,
-  sectionsByDay,
-  classesAdded,
-  classOrder,
-  schedules
+  day: number,
+  marked: Array<Array<{ startTime: Date; endTime: Date }>>,
+  index: number,
+  nofClasses: number,
+  latestClassEnding: Date,
+  sectionsByDay: Array<Array<Section>>,
+  classesAdded: Set<string>,
+  classOrder: Array<Section>,
+  schedules: Array<Array<Section>>
 ) {
+  interface dayList {
+    M: string;
+    T: string;
+    W: string;
+    R: string;
+    F: string;
+  }
+  let days = ["M", "T", "W", "R", "F"];
+
   //all desired classes have been added
   if (classesAdded.size == nofClasses) {
     schedules.push(classOrder);
@@ -84,7 +112,7 @@ function expand(
         let intersect = false;
 
         for (let pair of marked[i]) {
-          if (findIntersect([sections[j][1], sections[j][2]], pair)) {
+          if (findIntersect(sections[j], pair)) {
             intersect = true;
           }
         }
@@ -95,10 +123,10 @@ function expand(
           !classesAdded.has(sections[j].subject + sections[j].catalog_nbr)
         ) {
           var tempOrder = [];
-          var tempClasses = new Set();
+          var tempClasses: Set<string> = new Set();
           //array of taken up starttimes and endtimes
           //which are in data format
-          var tempMarked = [];
+          var tempMarked: typeof marked = [];
 
           //   sectionListCopy(classOrder, tempOrder);
           for (let i = 0; i < classOrder.length; i++)
@@ -114,10 +142,16 @@ function expand(
           //when a class is added all of its class times are added
           for (let k = 0; k < 5; k++) {
             if (
-              sections[j].haveClassIn[k] &&
-              !([sections[j].startTime, sections[j].endTime] in marked[k])
+              sections[j].haveClassIn[`${days[k]}` as keyof dayList] &&
+              !marked[k].includes({
+                startTime: sections[j].startTime,
+                endTime: sections[j].endTime,
+              })
             ) {
-              tempMarked[k].push([sections[j].startTime, sections[j].endTime]);
+              tempMarked[k].push({
+                startTime: sections[j].startTime,
+                endTime: sections[j].endTime,
+              });
             }
           }
 
@@ -127,7 +161,7 @@ function expand(
               tempMarked,
               0,
               nofClasses,
-              0,
+              new Date(`2001-01-01 00:00`),
               sectionsByDay,
               tempClasses,
               tempOrder,

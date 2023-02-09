@@ -71,7 +71,7 @@ export default class CARequest {
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
   }
 
-  async getSearchResults(query: string): Promise<Array<Object>> {
+  async getSearchResults(query: string): Promise<Array<any>> {
     // Request query results from courseavail
     try {
       let response = await fetch(
@@ -85,7 +85,15 @@ export default class CARequest {
     }
   }
 
-  async getCourseList(): Promise<Array<Object>> {
+  async getCourseList(): Promise<
+    Array<{
+      value: string;
+      label: string;
+      subject: string;
+      s: string;
+      d: string;
+    }>
+  > {
     // Request all coursed being offered for the quarter from courseavail
     try {
       let response = await fetch(

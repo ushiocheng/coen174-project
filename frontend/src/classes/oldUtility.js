@@ -3,54 +3,75 @@ function createSectionsByDay(sectionsByDay, allSections)
 {
     //can this be improved???
     //need to test on dummy data to see if it works
-    sectionsByDay.push(allSections.filter(function (item, index)
+    
+    let arrTemp  = []
+    sectionsByDay.push(allSections.filter(function (item)
     {
-        let temp = item.haveClassIn[0]
-        if(temp)
+        if(item.haveClassIn[0])
         {
-            allSections.splice(index, 1)
+            return true
         }
-        return (temp)
+        else
+        {
+            arrTemp.push(item)
+            return false
+        }
     }))
-
-    sectionsByDay.push(allSections.filter(function (item, index)
+    allSections = arrTemp
+    arrTemp  = []
+    sectionsByDay.push(allSections.filter(function (item)
     {
-        let temp = item.haveClassIn[1]
-        if(temp)
+        if(item.haveClassIn[1])
         {
-            allSections.splice(index, 1)
+            return true
         }
-        return (temp)
+        else
+        {
+            arrTemp.push(item)
+            return false
+        }
     }))
-
-    sectionsByDay.push(allSections.filter(function (item, index)
+    allSections = arrTemp
+    arrTemp  = []
+    sectionsByDay.push(allSections.filter(function (item)
     {
-        let temp = item.haveClassIn[2]
-        if(temp)
+        if(item.haveClassIn[2])
         {
-            allSections.splice(index, 1)
+            return true
         }
-        return (temp)
+        else
+        {
+            arrTemp.push(item)
+            return false
+        }
     })) 
-
-    sectionsByDay.push(allSections.filter(function (item, index)
+    allSections = arrTemp
+    arrTemp  = []
+    sectionsByDay.push(allSections.filter(function (item)
     {
-        let temp = item.haveClassIn[3]
-        if(temp)
+        if(item.haveClassIn[3])
         {
-            allSections.splice(index, 1)
+            return true
         }
-        return (temp)
+        else
+        {
+            arrTemp.push(item)
+            return false
+        }
     }))
-
-    sectionsByDay.push(allSections.filter(function (item, index)
+    allSections = arrTemp
+    arrTemp  = []
+    sectionsByDay.push(allSections.filter(function (item)
     {
-        let temp = item.haveClassIn[4]
-        if(temp)
+        if(item.haveClassIn[4])
         {
-            allSections.splice(index, 1)
+            return true
         }
-        return (temp)
+        else
+        {
+            arrTemp.push(item)
+            return false
+        }
     })) 
 }
 

@@ -1,0 +1,29 @@
+{
+    "files.exclude": {
+        ".vscode": false,
+        "**/.git": true,
+        ".devcontainer": true,
+        "**/node_modules": true,
+        "vetur.config.js": true,
+
+        "frontend/.browserslistrc": true,
+        "frontend/.editorconfig": true,
+        "frontend/.eslintrc.js": true,
+        "frontend/index.html": true,
+        "frontend/tsconfig.json": true,
+        "frontend/tsconfig.node.json": true,
+        "frontend/tsconfig.tsbuildinfo": true,
+        "frontend/vite.config.ts": true,
+        "frontend/yarn.lock": true,
+        "frontend/src/plugins": true,
+        "frontend/src/styles": true,
+        "frontend/src/vite-env.d.ts": true,
+        "frontend/src/App.vue": true,
+        "frontend/src/main.ts": true,
+
+        "backend/nodemon.json": true,
+        "backend/tsconfig.json": true,
+        "backend/tslint.json": true,
+        "backend/yarn.lock": true,
+    }
+}

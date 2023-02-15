@@ -8,6 +8,16 @@ import Section from "./Section";
 //note: you cant import typescript files into javascript
 //https://stackoverflow.com/questions/54410351/import-typescript-file-in-javascript
 
+
+
+//potential features:
+//minimum time in between classes set as a integer variable
+//implmentation: use with the intersection fcuntionality
+//add a section of time on a certain day that is off limits
+//implementaton: add to marked when building the schedule but save in a list of saved
+//off limit times in the structure of an array of size 5 for each day
+//
+
 export default class Scheduler {
   classList: Array<string>;
   unScheduledCourses: Set<Course>;
@@ -53,6 +63,7 @@ export default class Scheduler {
     //get a list of jsons for each class
     let jsonList = await this.requester.getCourseList();
 
+    console.log("Load classes:",jsonList)
     //extract the name of the course
     for (let item of jsonList) {
       this.classList.push(item["value"]);
@@ -130,6 +141,9 @@ export default class Scheduler {
     var classesAdded: Set<string> = new Set();
     var allSections = new Array();
 
+    console.log("selected courses:", this.selectedCourses)
+
+
     this.selectedCourses.forEach((item) => {
       allSections.push(...item.sections);
     });
@@ -137,9 +151,13 @@ export default class Scheduler {
     allSections.sort(compareFn);
 
     var sectionsByDay = new Array();
+    
+    console.log("all sections sorted:");
+    for(let item of allSections){
+      console.log(item) 
+    }
     createSectionsByDay(sectionsByDay, allSections);
-    console.log(allSections);
-    console.log(sectionsByDay);
+    console.log("sections by day", sectionsByDay);
     expand(
       0,
       marked,

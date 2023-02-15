@@ -27,7 +27,9 @@ export default class CARequest {
   activeQuarterID: number = 4420; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
 
-  constructor(quarter = "default") {
+
+  //tempporary fix
+  constructor(quarter = "Fall 2022") {
     this.activeQuarter = quarter;
     this.getQuarters().then((quarterList) => {
       this.quarterList = quarterList;
@@ -145,10 +147,12 @@ export default class CARequest {
   > {
     // Request all coursed being offered for the quarter from courseavail
     try {
+      console.log("quarterId",this.activeQuarterID)
       let response = await fetch(
         `/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
       );
       let allCourses = await response.json();
+      console.log("response:", allCourses)
       return allCourses.results;
     } catch (error) {
       console.error(error);

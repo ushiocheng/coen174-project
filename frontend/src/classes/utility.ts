@@ -169,7 +169,7 @@ function expand(
             expand(
               i,
               tempMarked,
-              index + 1,
+              j + 1,
               nofClasses,
               sections[j].endTime,
               sectionsByDay,

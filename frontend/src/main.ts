@@ -24,14 +24,23 @@ import Scheduler from "./classes/Scheduler";
 
 let scheduler = new Scheduler();
 (async () => {
+  const start = Date.now();
   await scheduler.preLoad();
-  await scheduler.addCourse("ACTG 131");
-  await scheduler.addCourse("ACTG 136");
-  await scheduler.addCourse("AMTH 106");
-  await scheduler.addCourse("AMTH 108");
-  await scheduler.addCourse("ELEN 50");
-  scheduler.removeCourse("ELEN 50");
+  //await scheduler.addCourse("ACTG 131");
+  // await scheduler.addCourse("ENGL 1A");
+  // await scheduler.addCourse("ACTG 136");
+  // await scheduler.addCourse("AMTH 106");
+  // await scheduler.addCourse("AMTH 108");
+  // await scheduler.addCourse("ELEN 50");
+
+  console.log(await scheduler.addCourse("COEN 145"));
+  console.log(await scheduler.addCourse("COEN 140"));
+  console.log(await scheduler.addCourse("COEN 146"));
+  console.log(await scheduler.addCourse("COEN 179"));
+  //scheduler.removeCourse("ELEN 50");
   scheduler.buildSchedules();
-  console.log(scheduler.scheduleList);
+  console.log(scheduler.scheduleList.length);
   for (let item of scheduler.scheduleList) console.log(item);
+  const end = Date.now();
+  console.log("runtime:",(end-start)/1000);
 })();

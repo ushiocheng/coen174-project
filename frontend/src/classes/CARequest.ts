@@ -27,28 +27,25 @@ export default class CARequest {
   activeQuarterID: number = 4420; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
 
-
   //this cannot be in the constrcutor!!!
   //there is async calls within
 
-  constructor() {
+  constructor(quarter = "default") {
     // //isn't this redundant?
-    // this.activeQuarter = quarter;
+    this.activeQuarter = quarter;
     // this.getQuarters().then((quarterList) => {
     //   //resets the quarterList
     //   //and sets the active quarter
     //   this.quarterList = quarterList;
     //   this.setActiveQuarter(this.activeQuarter);
     // });
-
   }
 
-  async set(quarter = "Fall 2022"){
-      this.activeQuarter = quarter;
-      await this.getQuarters().then((quarterList) => {
+  async setQuarterList() {
+    await this.getQuarters().then((quarterList) => {
       //resets the quarterList
-      //and sets the active quarter
       this.quarterList = quarterList;
+      //sets the active quarter
       this.setActiveQuarter(this.activeQuarter);
     });
   }
@@ -71,7 +68,7 @@ export default class CARequest {
     try {
       let response = await fetch("/courseavail/autocomplete/quarters/");
       let quarters = (await response.json()) as CAQuarterList;
-      console.log("Quarters:", quarters.results.indb)
+      // console.log("Quarters:", quarters.results.indb);
       return quarters.results.indb;
     } catch (error) {
       console.error(error);
@@ -89,7 +86,6 @@ export default class CARequest {
     });
     //sets the active quarter ID to the first if there were no matches
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
-    console.log("chosenID", this.activeQuarterID)
   }
 
   async getSearchResults(query: string): Promise<
@@ -170,7 +166,7 @@ export default class CARequest {
         `/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
       );
       let allCourses = await response.json();
-      console.log("response:", allCourses)
+      // console.log("response:", allCourses);
       return allCourses.results;
     } catch (error) {
       console.error(error);

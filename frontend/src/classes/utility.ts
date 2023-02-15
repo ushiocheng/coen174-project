@@ -135,7 +135,6 @@ function expand(
 
           tempOrder.push(sections[j]);
           tempClasses.add(sections[j].subject + sections[j].catalog_nbr);
-
           //all the classes times on other days must be kept track of
           //when a class is added all of its class times are added
           for (let k = 0; k < 5; k++) {

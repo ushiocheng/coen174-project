@@ -8,8 +8,6 @@ import Section from "./Section";
 //note: you cant import typescript files into javascript
 //https://stackoverflow.com/questions/54410351/import-typescript-file-in-javascript
 
-
-
 //potential features:
 //minimum time in between classes set as a integer variable
 //implmentation: use with the intersection fcuntionality
@@ -54,12 +52,14 @@ export default class Scheduler {
   /** Switches the quarter that will be used for course searches and
    *  schedule generation.
    */
-  changeQuarter(quarterId: string) {
-    this.requester.setActiveQuarter(quarterId);
+  async changeQuarter(quarter: string) {
+    this.requester.setActiveQuarter(quarter);
+    await this.updateClassList();
   }
 
-  //This should be called when the page loads
-  async preLoad() {
+  async updateClassList() {
+    this.classList = [];
+
     //get a list of jsons for each class
     let jsonList = await this.requester.getCourseList();
 
@@ -68,19 +68,27 @@ export default class Scheduler {
       this.classList.push(item["value"]);
     }
   }
+  //This should be called when the page loads
+  async preLoad() {
+    await this.requester.setQuarterList();
+    await this.updateClassList();
+  }
 
   //need to request the classes in this function
   //direct user input
-  async addCourse(courseString: string) {
+  async addCourse(courseString: string): Promise<boolean> {
     //need to check for validity
 
     //get sections that have the given class name
     if (this.selectedCourses.has(courseString)) {
-      return "Already added";
+      console.log("Already added");
+      return false;
     } else if (!this.classList.includes(courseString)) {
-      return "Not a valid Course";
+      console.log("Not a valid Course");
+      return false;
     } else {
       let courseSections = await this.requester.getSearchResults(courseString);
+      // console.log(courseSections);
       let pair: Array<string> = [];
       pair = courseString.split(" ", 2);
       //if the class has no schedule
@@ -92,12 +100,10 @@ export default class Scheduler {
         let courseObj = new Course(pair[0], pair[1]);
         let item: any;
 
-        console.log(courseString, courseSections);
+        // console.log(courseString, courseSections);
 
         for (item of courseSections) {
-
-          if(item["c_duration"]!= "")
-          {
+          if (item["c_duration"] != "") {
             let section = new Section(
               courseObj,
               item["class_nbr"],
@@ -107,13 +113,14 @@ export default class Scheduler {
               item["c_duration"],
               item["subject"],
               item["catalog_nbr"]
-              
             );
             courseObj.sections.push(section);
           }
         }
         this.selectedCourses.set(courseString, courseObj);
       }
+      // console.log("course added");
+      return true;
     }
   }
 
@@ -148,8 +155,7 @@ export default class Scheduler {
     var classesAdded: Set<string> = new Set();
     var allSections = new Array();
 
-    console.log("selected courses:", this.selectedCourses)
-
+    // console.log("selected courses:", this.selectedCourses);
 
     this.selectedCourses.forEach((item) => {
       allSections.push(...item.sections);
@@ -158,13 +164,13 @@ export default class Scheduler {
     allSections.sort(compareFn);
 
     var sectionsByDay = new Array();
-    
-    console.log("all sections sorted:");
-    for(let item of allSections){
-      console.log(item) 
+
+    // console.log("all sections sorted:");
+    for (let item of allSections) {
+      // console.log(item);
     }
     createSectionsByDay(sectionsByDay, allSections);
-    console.log("sections by day", sectionsByDay);
+    // console.log("sections by day", sectionsByDay);
     expand(
       0,
       marked,

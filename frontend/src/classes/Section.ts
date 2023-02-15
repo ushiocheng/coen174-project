@@ -1,7 +1,7 @@
 import Course from "./Course";
 
 export default class Section {
-  clsInfo: Course;
+  // clsInfo: Course;
   // 5 digit UID. ex. 50180
   sectionID: number;
   haveClassIn = {
@@ -27,7 +27,7 @@ export default class Section {
     subject: string,
     catalog_nbr: string
   ) {
-    this.clsInfo = course;
+    // this.clsInfo = course;
     this.sectionID = sectionID;
     mtgDays.split("").forEach((day) => {
       (this.haveClassIn as any)[day] = true;

@@ -23,15 +23,31 @@
 */
 
 export default class CARequest {
-  activeQuarter: string; // The quarter used for any future searches
+  activeQuarter: string = ""; // The quarter used for any future searches
   activeQuarterID: number = 4420; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
 
 
-  //tempporary fix
-  constructor(quarter = "Fall 2022") {
-    this.activeQuarter = quarter;
-    this.getQuarters().then((quarterList) => {
+  //this cannot be in the constrcutor!!!
+  //there is async calls within
+
+  constructor() {
+    // //isn't this redundant?
+    // this.activeQuarter = quarter;
+    // this.getQuarters().then((quarterList) => {
+    //   //resets the quarterList
+    //   //and sets the active quarter
+    //   this.quarterList = quarterList;
+    //   this.setActiveQuarter(this.activeQuarter);
+    // });
+
+  }
+
+  async set(quarter = "Fall 2022"){
+      this.activeQuarter = quarter;
+      await this.getQuarters().then((quarterList) => {
+      //resets the quarterList
+      //and sets the active quarter
       this.quarterList = quarterList;
       this.setActiveQuarter(this.activeQuarter);
     });
@@ -55,6 +71,7 @@ export default class CARequest {
     try {
       let response = await fetch("/courseavail/autocomplete/quarters/");
       let quarters = (await response.json()) as CAQuarterList;
+      console.log("Quarters:", quarters.results.indb)
       return quarters.results.indb;
     } catch (error) {
       console.error(error);
@@ -70,7 +87,9 @@ export default class CARequest {
         this.activeQuarterID = pair.value;
       }
     });
+    //sets the active quarter ID to the first if there were no matches
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
+    console.log("chosenID", this.activeQuarterID)
   }
 
   async getSearchResults(query: string): Promise<
@@ -147,7 +166,6 @@ export default class CARequest {
   > {
     // Request all coursed being offered for the quarter from courseavail
     try {
-      console.log("quarterId",this.activeQuarterID)
       let response = await fetch(
         `/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
       );

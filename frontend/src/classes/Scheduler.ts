@@ -63,7 +63,6 @@ export default class Scheduler {
     //get a list of jsons for each class
     let jsonList = await this.requester.getCourseList();
 
-    console.log("Load classes:",jsonList)
     //extract the name of the course
     for (let item of jsonList) {
       this.classList.push(item["value"]);
@@ -92,18 +91,26 @@ export default class Scheduler {
       } else {
         let courseObj = new Course(pair[0], pair[1]);
         let item: any;
+
+        console.log(courseString, courseSections);
+
         for (item of courseSections) {
-          let section = new Section(
-            courseObj,
-            item["class_nbr"],
-            item["mtg_days_1"],
-            item["c_hrstart"],
-            item["c_mnstart"],
-            item["c_duration"],
-            item["subject"],
-            item["catalog_nbr"]
-          );
-          courseObj.sections.push(section);
+
+          if(item["c_duration"]!= "")
+          {
+            let section = new Section(
+              courseObj,
+              item["class_nbr"],
+              item["mtg_days_1"],
+              item["c_hrstart"],
+              item["c_mnstart"],
+              item["c_duration"],
+              item["subject"],
+              item["catalog_nbr"]
+              
+            );
+            courseObj.sections.push(section);
+          }
         }
         this.selectedCourses.set(courseString, courseObj);
       }

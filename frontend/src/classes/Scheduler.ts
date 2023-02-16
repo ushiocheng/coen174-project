@@ -74,6 +74,8 @@ export default class Scheduler {
    */
   async changeQuarter(quarter: string) {
     this.requester.setActiveQuarter(quarter);
+    this.selectedCourses = new Map()
+    this.scheduleList = new Array()
     await this.updateClassList();
   }
 
@@ -139,7 +141,7 @@ export default class Scheduler {
         }
         this.selectedCourses.set(courseString, courseObj);
       }
-      // console.log("course added");
+      console.log("course added");
       return true;
     }
   }
@@ -177,7 +179,6 @@ export default class Scheduler {
       markedNew.push(item)
     }
 
-    console.log(markedNew)
     var classesAdded: Set<string> = new Set();
     var allSections = new Array();
 

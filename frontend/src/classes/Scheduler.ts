@@ -55,11 +55,14 @@ export default class Scheduler {
   }
 
 
+  //the start and end time should be
+  //starting on 2001-01-01 plus an amount of time
   inputSchedule(day:number, start:Date, end:Date)
   {
     this.marked[day].push({startTime: start, endTime: end})
   }
 
+  //the buffer can be used to add half of its time to before the start and after the end of each
   createBuffer(buff: number)
   {
     this.buffer = buff
@@ -188,7 +191,7 @@ export default class Scheduler {
     }
     createSectionsByDay(sectionsByDay, allSections);
     // console.log("sections by day", sectionsByDay);
-    expand(
+    expand(this.buffer,
       0,
       markedNew,
       0,

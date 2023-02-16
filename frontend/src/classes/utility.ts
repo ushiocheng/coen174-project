@@ -36,12 +36,20 @@ function compareFn(s1: any, s2: any) {
   }
   return 0;
 }
+//intregrate  buffer
+function findIntersect(buffer:number, s1: Section, s2: { startTime: Date; endTime: Date }) {
+  
+  var temp = new Date(`2001-01-01 00:00`)
+  temp.setMinutes(buffer)
+  temp = new Date(temp.getTime() - new Date(`2001-01-01 00:00`).getTime())
 
-function findIntersect(s1: Section, s2: { startTime: Date; endTime: Date }) {
-  if (s1.startTime < s2.startTime && s1.endTime > s2.startTime) {
+  var end1 = new Date(s1.endTime.getTime()+temp.getTime())
+  var end2 = new Date(s2.endTime.getTime()+temp.getTime())
+  
+  if (s1.startTime< s2.startTime && end1 > s2.startTime) {
     return true;
   }
-  if (s2.startTime < s1.startTime && s2.endTime > s1.startTime) {
+  if (s2.startTime < s1.startTime && end2 > s1.startTime) {
     return true;
   }
 
@@ -76,6 +84,7 @@ function markedCopy(l1: any, l2: any) {
 }
 
 function expand(
+  buffer: number,
   day: number,
   marked: Array<Array<{ startTime: Date; endTime: Date }>>,
   index: number,
@@ -110,14 +119,21 @@ function expand(
         let intersect = false;
 
         for (let pair of marked[i]) {
-          if (findIntersect(sections[j], pair)) {
+          if (findIntersect(buffer, sections[j], pair)) {
             intersect = true;
           }
         }
 
+
+        var temp = new Date(`2001-01-01 00:00`)
+        temp.setMinutes(buffer)
+        temp = new Date(temp.getTime() - new Date(`2001-01-01 00:00`).getTime())
+        var threshold  = new Date(temp.getTime()+latestClassEnding.getTime())
+
+        
         if (
           !intersect &&
-          latestClassEnding <= sections[j].startTime &&
+          threshold <= sections[j].startTime &&
           !classesAdded.has(sections[j].subject + sections[j].catalog_nbr)
         ) {
           var tempOrder = [];
@@ -153,7 +169,7 @@ function expand(
           }
 
           if (j == sections.length - 1) {
-            expand(
+            expand(buffer,
               i + 1,
               tempMarked,
               0,
@@ -165,7 +181,7 @@ function expand(
               schedules
             );
           } else {
-            expand(
+            expand(buffer,
               i,
               tempMarked,
               j + 1,

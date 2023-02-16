@@ -22,8 +22,13 @@ export default class Scheduler {
   requester: CARequest;
   selectedCourses: Map<string, Course>;
   scheduleList: Array<Array<Section>>;
+  buffer: Number;
+  marked: {startTime: Date; endTime: Date;}[][];
 
   constructor() {
+
+    this.buffer = 0
+    this.marked = [[],[],[],[],[]]
     //a list of class strings
     this.classList = [];
 
@@ -48,6 +53,18 @@ export default class Scheduler {
     //list of list of sections
     this.scheduleList = new Array();
   }
+
+
+  inputSchedule(day:number, start:Date, end:Date)
+  {
+    this.marked[day].push({startTime: start, endTime: end})
+  }
+
+  createBuffer(buff: number)
+  {
+    this.buffer = buff
+  }
+
 
   /** Switches the quarter that will be used for course searches and
    *  schedule generation.
@@ -151,7 +168,7 @@ export default class Scheduler {
    *  - Stored results in scheduleList
    */
   buildSchedules() {
-    var marked = [[], [], [], [], []];
+    var markedNew = this.marked;
     var classesAdded: Set<string> = new Set();
     var allSections = new Array();
 
@@ -173,7 +190,7 @@ export default class Scheduler {
     // console.log("sections by day", sectionsByDay);
     expand(
       0,
-      marked,
+      markedNew,
       0,
       this.selectedCourses.size,
       new Date(`2001-01-01 00:00`),

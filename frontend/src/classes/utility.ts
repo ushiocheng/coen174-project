@@ -47,13 +47,10 @@ function findIntersect(buffer:number, s1: Section, s2: { startTime: Date; endTim
   // var end2 = new Date(s2.endTime.getTime()+temp.getTime() - temp2.getTime())
 
 
-  console.log(s1.endTime)
-  console.log(s2.endTime)
+
   //changes:
   var end1 = new Date((s1.endTime.getTime())+buffer*60000)
   var end2 = new Date((s2.endTime.getTime())+buffer*60000)
-  console.log(end1)
-  console.log(end2)
 
   
   if (s1.startTime< s2.startTime && end1 > s2.startTime) {
@@ -127,7 +124,6 @@ function expand(
         let intersect = false;
 
 
-        console.log("marked:",marked)
         for (let pair of marked[i]) {
           if (findIntersect(buffer, sections[j], pair)) {
             intersect = true;

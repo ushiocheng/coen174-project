@@ -28,14 +28,38 @@ let scheduler = new Scheduler();
   const start = Date.now();
   await scheduler.preLoad();
 
+  scheduler.changeQuarter("Spring 2023");
+  console.log("Generating schedules for Spring 2023:");
 
-  //scheduler.createBuffer(0);
-  await scheduler.addCourse("ACTG 131"); // Returns true if successfully added, false otherwise
+  await scheduler.addCourse("ACTG 131");
   await scheduler.addCourse("ACTG 136");
   await scheduler.addCourse("AMTH 106");
   await scheduler.addCourse("AMTH 108");
 
-  console.log("Generating schedules for:");
+  console.log(scheduler.selectedCourses);
+  scheduler.buildSchedules();
+  console.log(scheduler.scheduleList);
+
+  scheduler.changeQuarter("Winter 2023");
+  console.log("Generating schedules for Winter 2023:");
+
+  await scheduler.addCourse("COEN 145");
+  await scheduler.addCourse("COEN 140");
+  await scheduler.addCourse("COEN 146");
+  await scheduler.addCourse("COEN 179");
+
+  console.log(scheduler.selectedCourses);
+  scheduler.buildSchedules();
+  console.log(scheduler.scheduleList);
+
+  scheduler.changeQuarter("Fall 2022");
+  console.log("Generating schedules for Fall 2022:");
+
+  await scheduler.addCourse("ACTG 131");
+  await scheduler.addCourse("ENGL 1A");
+  await scheduler.addCourse("ACTG 136");
+  await scheduler.addCourse("AMTH 106");
+
   console.log(scheduler.selectedCourses);
   scheduler.buildSchedules();
   console.log(scheduler.scheduleList);

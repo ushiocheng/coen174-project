@@ -30,7 +30,7 @@ export default class CARequest {
   //this cannot be in the constrcutor!!!
   //there is async calls within
 
-  constructor(quarter = "default") {
+  constructor(quarter = "Fall 2021") {
     // //isn't this redundant?
     this.activeQuarter = quarter;
     // this.getQuarters().then((quarterList) => {
@@ -86,6 +86,7 @@ export default class CARequest {
     });
     //sets the active quarter ID to the first if there were no matches
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
+    this.activeQuarter = this.activeQuarter || this.quarterList[0].label;
   }
 
   async getSearchResults(query: string): Promise<

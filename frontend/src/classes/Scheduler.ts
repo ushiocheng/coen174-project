@@ -151,9 +151,12 @@ export default class Scheduler {
    *  - Stored results in scheduleList
    */
   buildSchedules() {
-    var marked = [[], [], [], [], []];
-    var classesAdded: Set<string> = new Set();
-    var allSections = new Array();
+    // Clear any existing schedules
+    this.scheduleList = new Array();
+
+    let marked = [[], [], [], [], []];
+    let classesAdded: Set<string> = new Set();
+    let allSections = new Array();
 
     // console.log("selected courses:", this.selectedCourses);
 
@@ -163,7 +166,7 @@ export default class Scheduler {
 
     allSections.sort(compareFn);
 
-    var sectionsByDay = new Array();
+    let sectionsByDay = new Array();
 
     // console.log("all sections sorted:");
     for (let item of allSections) {

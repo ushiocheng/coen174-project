@@ -20,23 +20,51 @@ registerPlugins(app);
 app.mount("#app");
 
 /*Testing*/
-import Scheduler from "./classes/Scheduler";
+import ScheduleSwitcher from "./classes/ScheduleSwitcher";
 
-let scheduler = new Scheduler();
+let schedules = new ScheduleSwitcher();
 
 (async () => {
   const start = Date.now();
-  await scheduler.preLoad();
 
-  await scheduler.addCourse("ACTG 131"); // Returns true if successfully added, false otherwise
-  await scheduler.addCourse("ACTG 136");
-  await scheduler.addCourse("AMTH 106");
-  await scheduler.addCourse("AMTH 108");
+  // Test creating schedules for different people
+  await schedules.createNewSchedule("Anthony's Schedule");
+  await schedules.createNewSchedule("Jackson's Schedule");
+  await schedules.createNewSchedule("Bad schedule");
+  console.log(schedules.getAllSchedules());
 
-  console.log("Generating schedules for:");
-  console.log(scheduler.selectedCourses);
-  scheduler.buildSchedules();
-  console.log(scheduler.scheduleList);
+  // Test deleting specific schedules
+  schedules.removeSchedule("Bad schedule");
+  console.log(schedules.getAllSchedules());
+
+  // Switching to and using one person's schedule
+  schedules.switchActiveSchedule("Jackson's Schedule");
+  await schedules.changeQuarter("Winter 2022");
+  await schedules.includeCourse("ACTG 131"); // Returns true if successfully added, false otherwise
+  await schedules.includeCourse("ACTG 136");
+  await schedules.includeCourse("AMTH 106");
+  await schedules.includeCourse("AMTH 108");
+  console.log(`${schedules.getActiveScheduleName()}'s schedules:`);
+  console.log(schedules.getSchedules());
+
+  // Switching to and using another person's schedule
+  schedules.switchActiveSchedule("Anthony's Schedule");
+  await schedules.changeQuarter("Fall 2022");
+  await schedules.includeCourse("COEN 140");
+  await schedules.includeCourse("COEN 146");
+  await schedules.includeCourse("COEN 145");
+  await schedules.includeCourse("COEN 179");
+  console.log(`${schedules.getActiveScheduleName()}'s schedules:`);
+  console.log(schedules.getSchedules());
+
+  schedules.switchActiveSchedule("Jackson's Schedule");
+  console.log(`${schedules.getActiveScheduleName()}'s schedules:`);
+  console.log(schedules.getSchedules());
+
+  // console.log("Generating schedules for:");
+  // console.log(scheduler.selectedCourses);
+  // scheduler.buildSchedules();
+  // console.log(scheduler.scheduleList);
 
   const end = Date.now();
   console.log("runtime: " + (end - start) / 1000);

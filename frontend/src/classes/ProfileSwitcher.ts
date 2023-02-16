@@ -22,6 +22,8 @@ export default class ProfileSwitcher {
   async createNewProfile(
     name: string = `Profile ${(this.numProfiles + 1).toString()}`
   ) {
+    if (name.length === 0)
+      name = `Profile ${(this.numProfiles + 1).toString()}`;
     // Create and initialize a new scheduler object
     let newScheduler = new Scheduler();
     await newScheduler.preLoad();
@@ -59,6 +61,7 @@ export default class ProfileSwitcher {
   }
 
   editProfileName(oldName: string, newName: string) {
+    if (newName.length === 0) return;
     if (this.profiles.has(oldName)) {
       const temp: Scheduler = this.profiles.get(oldName)!;
       this.profiles.delete(oldName);

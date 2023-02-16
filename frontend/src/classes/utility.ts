@@ -68,9 +68,7 @@ function markedCopy(l1: any, l2: any) {
   for (let i = 0; i < 5; i++) {
     l2.push([]);
     for (let j = 0; j < l1[i].length; j++) {
-      l2[i].push([]);
-      l2[i][j].push(l1[i][j][0]);
-      l2[i][j].push(l1[i][j][1]);
+      l2[i].push({ startTime: l1[i][j].startTime, endTime: l1[i][j].endTime });
     }
   }
 }

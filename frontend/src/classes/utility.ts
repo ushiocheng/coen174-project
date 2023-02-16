@@ -86,9 +86,7 @@ function markedCopy(l1: any, l2: any) {
   for (let i = 0; i < 5; i++) {
     l2.push([]);
     for (let j = 0; j < l1[i].length; j++) {
-      l2[i].push([]);
-      l2[i][j].push(l1[i][j][0]);
-      l2[i][j].push(l1[i][j][1]);
+      l2[i].push({startTime: l1[i][j].startTime, endTime: l1[i][j].endTime});
     }
   }
 }
@@ -128,6 +126,8 @@ function expand(
       for (let j = index; j < sections.length; j++) {
         let intersect = false;
 
+
+        console.log("marked:",marked)
         for (let pair of marked[i]) {
           if (findIntersect(buffer, sections[j], pair)) {
             intersect = true;
@@ -167,13 +167,13 @@ function expand(
             if (
               sections[j].haveClassIn[`${days[k]}` as keyof dayList] &&
               !marked[k].includes({
-                startTime: sections[j].startTime,
-                endTime: sections[j].endTime,
+                startTime: new Date(sections[j].startTime),
+                endTime: new Date(sections[j].endTime),
               })
             ) {
               tempMarked[k].push({
-                startTime: sections[j].startTime,
-                endTime: sections[j].endTime,
+                startTime: new Date(sections[j].startTime),
+                endTime: new Date(sections[j].endTime),
               });
             }
           }

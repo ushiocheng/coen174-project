@@ -28,6 +28,8 @@ let scheduler = new Scheduler();
   const start = Date.now();
   await scheduler.preLoad();
 
+
+  //scheduler.createBuffer(0);
   await scheduler.addCourse("ACTG 131"); // Returns true if successfully added, false otherwise
   await scheduler.addCourse("ACTG 136");
   await scheduler.addCourse("AMTH 106");

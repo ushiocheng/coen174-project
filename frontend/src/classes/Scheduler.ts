@@ -22,7 +22,7 @@ export default class Scheduler {
   requester: CARequest;
   selectedCourses: Map<string, Course>;
   scheduleList: Array<Array<Section>>;
-  buffer: Number;
+  buffer: number;
   marked: {startTime: Date; endTime: Date;}[][];
 
   constructor() {

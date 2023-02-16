@@ -39,12 +39,22 @@ function compareFn(s1: any, s2: any) {
 //intregrate  buffer
 function findIntersect(buffer:number, s1: Section, s2: { startTime: Date; endTime: Date }) {
   
-  var temp = new Date(`2001-01-01 00:00`)
-  temp.setMinutes(buffer)
-  temp = new Date(temp.getTime() - new Date(`2001-01-01 00:00`).getTime())
+  // var temp = new Date(`2001-01-01 00:00`)
+  // var temp2 = new Date(`2001-01-01 00:00`);
+  // temp.setMinutes(buffer)
 
-  var end1 = new Date(s1.endTime.getTime()+temp.getTime())
-  var end2 = new Date(s2.endTime.getTime()+temp.getTime())
+  // var end1 = new Date(s1.endTime.getTime()+temp.getTime() - temp2.getTime())
+  // var end2 = new Date(s2.endTime.getTime()+temp.getTime() - temp2.getTime())
+
+
+  console.log(s1.endTime)
+  console.log(s2.endTime)
+  //changes:
+  var end1 = new Date((s1.endTime.getTime())+buffer*60000)
+  var end2 = new Date((s2.endTime.getTime())+buffer*60000)
+  console.log(end1)
+  console.log(end2)
+
   
   if (s1.startTime< s2.startTime && end1 > s2.startTime) {
     return true;
@@ -125,11 +135,11 @@ function expand(
         }
 
 
-        var temp = new Date(`2001-01-01 00:00`)
-        temp.setMinutes(buffer)
-        temp = new Date(temp.getTime() - new Date(`2001-01-01 00:00`).getTime())
-        var threshold  = new Date(temp.getTime()+latestClassEnding.getTime())
+        // console.log(latestClassEnding)
 
+        var threshold = new Date((latestClassEnding.getTime())+buffer*60000)
+
+        // console.log(threshold)
         
         if (
           !intersect &&

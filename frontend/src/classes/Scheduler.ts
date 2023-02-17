@@ -66,6 +66,7 @@ export default class Scheduler {
   createBuffer(buff: number)
   {
     this.buffer = buff
+    this.scheduleList = new Array()
   }
 
 
@@ -103,10 +104,10 @@ export default class Scheduler {
 
     //get sections that have the given class name
     if (this.selectedCourses.has(courseString)) {
-      console.log("Already added");
+      console.log(courseString, " Already added");
       return false;
     } else if (!this.classList.includes(courseString)) {
-      console.log("Not a valid Course");
+      console.log(courseString, " Not a valid Course");
       return false;
     } else {
       let courseSections = await this.requester.getSearchResults(courseString);
@@ -141,7 +142,7 @@ export default class Scheduler {
         }
         this.selectedCourses.set(courseString, courseObj);
       }
-      console.log("course added");
+      console.log(courseString, " has been added");
       return true;
     }
   }

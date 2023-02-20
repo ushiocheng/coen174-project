@@ -24,14 +24,11 @@
 
 export default class CARequest {
   activeQuarter: string = ""; // The quarter used for any future searches
-  activeQuarterID: number = 4420; // The ID of the quarter, for part of the fetch request
+  activeQuarterID: number = 4300; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
 
-  //this cannot be in the constrcutor!!!
-  //there is async calls within
-
+  /** Default quarter is Fall 2021 */
   constructor(quarter = "Fall 2021") {
-    // //isn't this redundant?
     this.activeQuarter = quarter;
     // this.getQuarters().then((quarterList) => {
     //   //resets the quarterList
@@ -71,8 +68,14 @@ export default class CARequest {
       // console.log("Quarters:", quarters.results.indb);
       return quarters.results.indb;
     } catch (error) {
-      console.error(error);
-      return [];
+      /* TEMP FOR TESTING */
+      // console.error(error);
+      // return [];
+      let response = await fetch(
+        "https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/"
+      );
+      let quarters = (await response.json()) as CAQuarterList;
+      return quarters.results.indb;
     }
   }
 
@@ -147,8 +150,14 @@ export default class CARequest {
       let queryMatches = await response.json();
       return queryMatches.results;
     } catch (error) {
-      console.error(error);
-      return [];
+      /* TEMP FOR TESTING */
+      // console.error(error);
+      // return [];
+      let response = await fetch(
+        `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/ugrad/${query}`
+      );
+      let queryMatches = await response.json();
+      return queryMatches.results;
     }
   }
 
@@ -170,8 +179,15 @@ export default class CARequest {
       // console.log("response:", allCourses);
       return allCourses.results;
     } catch (error) {
-      console.error(error);
-      return [];
+      /* TEMP FOR TESTING */
+      // console.error(error);
+      // return [];
+      let response = await fetch(
+        `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
+      );
+      let allCourses = await response.json();
+      // console.log("response:", allCourses);
+      return allCourses.results;
     }
   }
 }

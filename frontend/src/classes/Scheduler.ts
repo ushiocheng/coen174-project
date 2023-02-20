@@ -49,12 +49,21 @@ export default class Scheduler {
     this.scheduleList = new Array();
   }
 
+  /** This should be called when the page loads
+   */
+  async preLoad() {
+    await this.requester.setQuarterList();
+    await this.updateClassList();
+  }
+
   /** Switches the quarter that will be used for course searches and
    *  schedule generation.
    */
   async changeQuarter(quarter: string) {
     this.requester.setActiveQuarter(quarter);
     await this.updateClassList();
+    this.selectedCourses.clear();
+    this.unScheduledCourses.clear();
   }
 
   async updateClassList() {
@@ -68,17 +77,11 @@ export default class Scheduler {
       this.classList.push(item["value"]);
     }
   }
-  //This should be called when the page loads
-  async preLoad() {
-    await this.requester.setQuarterList();
-    await this.updateClassList();
-  }
 
   //need to request the classes in this function
   //direct user input
   async addCourse(courseString: string): Promise<boolean> {
-    //need to check for validity
-
+    courseString = courseString.toUpperCase();
     //get sections that have the given class name
     if (this.selectedCourses.has(courseString)) {
       console.log("Already added");
@@ -131,6 +134,7 @@ export default class Scheduler {
    *          - false otherwise
    */
   removeCourse(courseString: string): boolean {
+    courseString = courseString.toUpperCase();
     return this.selectedCourses.delete(courseString);
   }
 

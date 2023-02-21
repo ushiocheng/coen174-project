@@ -22,8 +22,12 @@ export default class Scheduler {
   requester: CARequest;
   selectedCourses: Map<string, Course>;
   scheduleList: Array<Array<Section>>;
+  buffer: number;
+  marked: { startTime: Date; endTime: Date }[][];
 
   constructor() {
+    this.buffer = 0;
+    this.marked = [[], [], [], [], []];
     //a list of class strings
     this.classList = [];
 
@@ -49,11 +53,16 @@ export default class Scheduler {
     this.scheduleList = new Array();
   }
 
-  /** This should be called when the page loads
-   */
-  async preLoad() {
-    await this.requester.setQuarterList();
-    await this.updateClassList();
+  //the start and end time should be
+  //starting on 2001-01-01 plus an amount of time
+  inputSchedule(day: number, start: Date, end: Date) {
+    this.marked[day].push({ startTime: start, endTime: end });
+  }
+
+  //the buffer can be used to add half of its time to before the start and after the end of each
+  createBuffer(buff: number) {
+    this.buffer = buff;
+    this.scheduleList = new Array();
   }
 
   /** Switches the quarter that will be used for course searches and
@@ -61,6 +70,8 @@ export default class Scheduler {
    */
   async changeQuarter(quarter: string) {
     this.requester.setActiveQuarter(quarter);
+    this.selectedCourses = new Map();
+    this.scheduleList = new Array();
     await this.updateClassList();
     this.selectedCourses.clear();
     this.unScheduledCourses.clear();
@@ -84,10 +95,10 @@ export default class Scheduler {
     courseString = courseString.toUpperCase();
     //get sections that have the given class name
     if (this.selectedCourses.has(courseString)) {
-      console.log("Already added");
+      console.log(courseString, " Already added");
       return false;
     } else if (!this.classList.includes(courseString)) {
-      console.log("Not a valid Course");
+      console.log(courseString, " Not a valid Course");
       return false;
     } else {
       let courseSections = await this.requester.getSearchResults(courseString);
@@ -122,7 +133,7 @@ export default class Scheduler {
         }
         this.selectedCourses.set(courseString, courseObj);
       }
-      // console.log("course added");
+      console.log(courseString, " has been added");
       return true;
     }
   }
@@ -155,12 +166,14 @@ export default class Scheduler {
    *  - Stored results in scheduleList
    */
   buildSchedules() {
-    // Clear any existing schedules
-    this.scheduleList = new Array();
+    var markedNew = [];
 
-    let marked = [[], [], [], [], []];
-    let classesAdded: Set<string> = new Set();
-    let allSections = new Array();
+    for (let item of this.marked) {
+      markedNew.push(item);
+    }
+
+    var classesAdded: Set<string> = new Set();
+    var allSections = new Array();
 
     // console.log("selected courses:", this.selectedCourses);
 
@@ -179,8 +192,9 @@ export default class Scheduler {
     createSectionsByDay(sectionsByDay, allSections);
     // console.log("sections by day", sectionsByDay);
     expand(
+      this.buffer,
       0,
-      marked,
+      markedNew,
       0,
       this.selectedCourses.size,
       new Date(`2001-01-01 00:00`),

@@ -166,6 +166,7 @@ export default class Scheduler {
    *  - Stored results in scheduleList
    */
   buildSchedules() {
+    this.scheduleList = [];
     var markedNew = [];
 
     for (let item of this.marked) {

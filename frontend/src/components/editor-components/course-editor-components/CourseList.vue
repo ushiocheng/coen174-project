@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12">
         <v-list>
-          <course-list-item v-for="(course, index) in courses" :key="index" :course="course"/>
+          <course-list-item v-for="(course, index) in courses" :key="index" :course="course" @deleteCourse="courses.splice(index,1)"/>
         </v-list>
       </v-col>
     </v-row>
@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import CoursePicker from './CoursePicker.vue';
 import CourseListItem from './CourseListItem.vue';
-import { state } from '@/store/state';
+import Course from '@/classes/Course';
 
 export default defineComponent({
   name: 'CourseList',
@@ -25,12 +25,13 @@ export default defineComponent({
     CoursePicker,
     CourseListItem
   },
+  props: {
+    courses: {
+      type: Array<Course>,
+      required: true,
+    },
+  },
   setup() {
-    const courses = computed(() => state.courseSelected);
-
-    return {
-      courses
-    };
   }
 });
 </script>

@@ -3,7 +3,7 @@
   <rules-editor />
 </template>
 
-<script>
+<script lang="ts">
 import CoursesEditor from "@/components/editor-components/CoursesEditor.vue";
 import RulesEditor from "./editor-components/RulesEditor.vue";
 export default {

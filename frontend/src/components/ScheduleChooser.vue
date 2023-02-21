@@ -3,7 +3,7 @@
   <schedule-viewer-control />
 </template>
 
-<script>
+<script lang="ts">
 import ScheduleViewer from "./schedule-chooser-components/ScheduleViewer.vue";
 import ScheduleViewerControl from "./schedule-chooser-components/ScheduleViewerControl.vue";
 export default {

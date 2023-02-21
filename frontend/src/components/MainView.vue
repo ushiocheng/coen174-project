@@ -1,9 +1,10 @@
 <template>
+  Main View
   <editor />
   <schedule-chooser />
 </template>
 
-<script>
+<script lang="ts">
 import Editor from "@/components/Editor.vue";
 import ScheduleChooser from "@/components/ScheduleChooser.vue";
 export default {

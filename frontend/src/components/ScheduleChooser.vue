@@ -1,6 +1,9 @@
 <template>
-  <schedule-viewer />
-  <schedule-viewer-control />
+  <div style="border: 1px solid red; margin: 10px">
+    <p>component/ScheduleChooser</p>
+    <schedule-viewer />
+    <schedule-viewer-control />
+  </div>
 </template>
 
 <script lang="ts">

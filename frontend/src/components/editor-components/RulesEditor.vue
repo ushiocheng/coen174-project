@@ -1,6 +1,9 @@
 <template>
-  <rule-list />
-  <rule-editor />
+  <div style="border: 1px solid red; margin: 10px">
+    <p>RulesEdutor</p>
+    <rule-list />
+    <rule-editor />
+  </div>
 </template>
 
 <script lang="ts">

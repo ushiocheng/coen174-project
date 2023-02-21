@@ -1,5 +1,7 @@
 <template>
-  
+  <div style="border:1px solid red; margin: 10px;">
+    <p>RulesEditor/RuleEditor</p>
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,7 +1,9 @@
 <template>
-  Main View
-  <editor />
-  <schedule-chooser />
+  <div style="border: 1px solid red; margin: 10px">
+    <p>Main View</p>
+    <editor />
+    <schedule-chooser />
+  </div>
 </template>
 
 <script lang="ts">

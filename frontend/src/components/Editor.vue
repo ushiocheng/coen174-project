@@ -1,6 +1,9 @@
 <template>
-  <courses-editor />
-  <rules-editor />
+  <div style="border: 1px solid red; margin: 10px">
+    <p>component/Editor.vue</p>
+    <courses-editor />
+    <rules-editor />
+  </div>
 </template>
 
 <script lang="ts">

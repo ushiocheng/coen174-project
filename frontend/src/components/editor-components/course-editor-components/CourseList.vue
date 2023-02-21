@@ -1,29 +1,30 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <course-picker />
-      </v-col>
-      <v-col cols="12">
-        <v-list>
-          <course-list-item v-for="(course, index) in courses" :key="index" :course="course" @deleteCourse="courses.splice(index,1)"/>
-        </v-list>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div style="border: 1px solid red; margin: 10px">
+    <p>CoursesEditor/CourseList</p>
+    <v-container>
+      <v-list>
+        <course-list-item
+          v-for="(course, index) in courses"
+          :key="index"
+          :course="course"
+          @deleteCourse="courses.splice(index, 1)"
+        />
+      </v-list>
+    </v-container>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import CoursePicker from './CoursePicker.vue';
-import CourseListItem from './CourseListItem.vue';
-import Course from '@/classes/Course';
+import { defineComponent } from "vue";
+import CoursePicker from "./CoursePicker.vue";
+import CourseListItem from "./CourseListItem.vue";
+import Course from "@/classes/Course";
 
 export default defineComponent({
-  name: 'CourseList',
+  name: "CourseList",
   components: {
     CoursePicker,
-    CourseListItem
+    CourseListItem,
   },
   props: {
     courses: {
@@ -31,11 +32,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
-  }
+  setup() {},
 });
 </script>
 
-<style>
-
-</style>
+<style></style>

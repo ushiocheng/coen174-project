@@ -36,10 +36,6 @@ test("remove profile in list", async () => {
 
   profiles.removeProfile("Profile 4");
   expect(profiles.getAllProfiles().length).toBe(2);
-
-  // Remove profile that is not in list
-  profiles.removeProfile("Not a profile");
-  expect(profiles.getAllProfiles().length).toBe(2);
 });
 
 test("remove profile not in list", async () => {

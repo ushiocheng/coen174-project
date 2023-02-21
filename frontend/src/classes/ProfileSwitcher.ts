@@ -43,7 +43,7 @@ export default class ProfileSwitcher {
       this.activeProfileName = this.profiles.keys().next().value;
     }
     this.profiles.delete(name);
-    localStorage.removeItem(name);
+    // localStorage.removeItem(name);
   }
 
   getAllProfiles() {
@@ -93,12 +93,12 @@ export default class ProfileSwitcher {
     return this.activeProfile.scheduleList;
   }
 
-  saveActiveProfile() {
-    localStorage.setItem(
-      this.activeProfileName,
-      JSON.stringify(this.activeProfile)
-    );
-  }
+  // saveActiveProfile() {
+  //   localStorage.setItem(
+  //     this.activeProfileName,
+  //     JSON.stringify(this.activeProfile)
+  //   );
+  // }
 
-  saveAllProfiles() {}
+  // saveAllProfiles() {}
 }

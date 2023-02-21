@@ -89,6 +89,11 @@ export default class Scheduler {
     }
   }
 
+  // This should be called when the page loads
+  async preLoad() {
+    await this.requester.setQuarterList();
+    await this.updateClassList();
+  }
   //need to request the classes in this function
   //direct user input
   async addCourse(courseString: string): Promise<boolean> {

@@ -1,8 +1,7 @@
 <template>
-  <p>views/Home.vue</p>
-  <MainView />
+  <HelloWorld />
 </template>
 
 <script lang="ts" setup>
-import MainView from '@/components/MainView.vue'
+  import HelloWorld from '@/components/HelloWorld.vue'
 </script>

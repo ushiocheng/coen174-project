@@ -124,14 +124,17 @@ export default class Scheduler {
         for (item of courseSections) {
           if (item["c_duration"] != "") {
             let section = new Section(
-              courseObj,
               item["class_nbr"],
               item["mtg_days_1"],
               item["c_hrstart"],
               item["c_mnstart"],
               item["c_duration"],
               item["subject"],
-              item["catalog_nbr"]
+              item["catalog_nbr"],
+              item["instr_1"],
+              item["seats_text"],
+              item["seats_remaining"],
+              item["mtg_facility_1"]
             );
             courseObj.sections.push(section);
           }

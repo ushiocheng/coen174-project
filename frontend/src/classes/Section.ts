@@ -18,14 +18,17 @@ export default class Section {
   subject: string;
   catalog_nbr: string;
   constructor(
-    course: Course,
     sectionID: number,
     mtgDays: string,
     startHr: string,
     startMn: string,
     duration: number,
     subject: string,
-    catalog_nbr: string
+    catalog_nbr: string,
+    professor: string,
+    status: string,
+    remainingSeats: number,
+    location: string
   ) {
     // this.clsInfo = course;
     this.sectionID = sectionID;

@@ -63,7 +63,7 @@ test("change quarter", async () => {
   let scheduler = new Scheduler();
   await scheduler.preLoad();
 
-  expect(scheduler.requester.activeQuarter).toBe("Fall 2021");
+  expect(scheduler.requester.activeQuarter).toBe("Summer 2023");
   await scheduler.changeQuarter("Fall 2022");
   expect(scheduler.requester.activeQuarter).toBe("Fall 2022");
 });
@@ -86,9 +86,39 @@ test("change quarter to invalid quarter", async () => {
   let scheduler = new Scheduler();
   await scheduler.preLoad();
 
-  expect(scheduler.requester.activeQuarter).toBe("Fall 2021");
+  expect(scheduler.requester.activeQuarter).toBe("Summer 2023");
   await scheduler.changeQuarter("invalid quarter");
-  expect(scheduler.requester.activeQuarter).toBe("Fall 2021");
+  expect(scheduler.requester.activeQuarter).toBe("Summer 2023");
+});
+
+test("change career", async () => {
+  let scheduler = new Scheduler();
+  await scheduler.preLoad();
+
+  // Check default
+  expect(scheduler.requester.career).toBe("ugrad");
+
+  // Check if switching states works
+  await scheduler.changeCareer("grad");
+  await scheduler.changeQuarter("Spring 2023");
+  expect(scheduler.requester.activeQuarter).toBe("Spring 2023");
+  expect(scheduler.requester.career).toBe("grad");
+
+  // Only add course in current career (grad)
+  await scheduler.addCourse("COEN 233");
+  await scheduler.addCourse("COEN 12");
+  expect(scheduler.selectedCourses.size).toBe(1);
+
+  // Change career and add more courses
+  await scheduler.changeCareer("all");
+  await scheduler.addCourse("COEN 210");
+  await scheduler.addCourse("COEN 12");
+  expect(scheduler.selectedCourses.size).toBe(3);
+
+  // Change career and check if the list of valid coursed updated
+  await scheduler.changeCareer("ugrad");
+  await scheduler.addCourse("COEN 239");
+  expect(scheduler.selectedCourses.size).toBe(3);
 });
 
 test("build schedule easy", async () => {

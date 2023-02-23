@@ -16,12 +16,43 @@ import Section from "./Section";
 //off limit times in the structure of an array of size 5 for each day
 //
 
+
+
+
+
 export default class Scheduler {
-  classList: Array<string>;
+
+  //list of all classes in the current quarter
+  classList: Set<string>;
+  //record the name when a user adds a class
+  selectedCourseNames: Set<string>;
+
+  //courses that dont have a section
   unScheduledCourses: Set<Course>;
+
+  //make requests to scu
   requester: CARequest;
+
+  //array of sections that are full capacity
+  //this can eventually be integrated into a wait list verison
+  //of the schedules list 
+
+  //instead of this...
+  //each section has a mark to be filled or not
+  //after building the list of schedules
+  //a check can be made to see if the
+  //shedule has a class with zero capacity
+  //then it can be added to the list of waitlist shedules
+  filledSections: Array<Section>;
+
+  //this may still be useful so it is an intermeidary 
+  //between the classList and the build schedules functio
   selectedCourses: Map<string, Course>;
+
+  //list of schedules
   scheduleList: Array<Array<Section>>;
+
+  //minimum time in between classes or other activities thet user adds
   buffer: number;
   marked: { startTime: Date; endTime: Date }[][];
 
@@ -29,7 +60,7 @@ export default class Scheduler {
     this.buffer = 0;
     this.marked = [[], [], [], [], []];
     //a list of class strings
-    this.classList = [];
+    this.classList = new Set();
 
     //this is a hash table that maps course string like "COEN 12" to course object
     //this.scheduledCourses = new Map(String, Course);
@@ -42,7 +73,7 @@ export default class Scheduler {
 
     //the courses the user currently has selected to be part of the schedule
     //this does not include un scheduled courses
-    this.selectedCourses = new Map();
+    this.selectedCourses = new Map<string, Course>();
 
     //this is an array of all the sections for added courses
     //it can be sorted by starting time regardless of the class name
@@ -70,22 +101,25 @@ export default class Scheduler {
    */
   async changeQuarter(quarter: string) {
     this.requester.setActiveQuarter(quarter);
+    this.classList = new Set();
     this.selectedCourses = new Map();
+    this.selectedCourseNames = new Set();
     this.scheduleList = new Array();
+    this.filledSections = new Array();
     await this.updateClassList();
     this.selectedCourses.clear();
     this.unScheduledCourses.clear();
   }
 
   async updateClassList() {
-    this.classList = [];
+    this.classList = new Set();
 
     //get a list of jsons for each class
     let jsonList = await this.requester.getCourseList();
 
     //extract the name of the course
     for (let item of jsonList) {
-      this.classList.push(item["value"]);
+      this.classList.add(item["value"]);
     }
   }
 
@@ -96,55 +130,70 @@ export default class Scheduler {
   }
   //need to request the classes in this function
   //direct user input
-  async addCourse(courseString: string): Promise<boolean> {
-    courseString = courseString.toUpperCase();
-    //get sections that have the given class name
-    if (this.selectedCourses.has(courseString)) {
+  addCourse(courseString: string): boolean {
+    courseString = courseString.toUpperCase()
+    if (this.selectedCourseNames.has(courseString)) {
       console.log(courseString, " Already added");
       return false;
-    } else if (!this.classList.includes(courseString)) {
+    } else if (!this.classList.has(courseString)) {
       console.log(courseString, " Not a valid Course");
       return false;
     } else {
-      let courseSections = await this.requester.getSearchResults(courseString);
-      // console.log(courseSections);
-      let pair: Array<string> = [];
-      pair = courseString.split(" ", 2);
-      //if the class has no schedule
-      if (courseSections[0]["c_hrstart"] == "" && courseSections.length == 1) {
-        //if class is unscheduled
-        let courseObj = new Course(pair[0], pair[1]);
-        this.unScheduledCourses.add(courseObj);
-      } else {
-        let courseObj = new Course(pair[0], pair[1]);
-        let item: any;
-
-        // console.log(courseString, courseSections);
-
-        for (item of courseSections) {
-          if (item["c_duration"] != "") {
-            let section = new Section(
-              item["class_nbr"],
-              item["mtg_days_1"],
-              item["c_hrstart"],
-              item["c_mnstart"],
-              item["c_duration"],
-              item["subject"],
-              item["catalog_nbr"],
-              item["instr_1"],
-              item["seats_text"],
-              item["seats_remaining"],
-              item["mtg_facility_1"]
-            );
-            courseObj.sections.push(section);
-          }
-        }
-        this.selectedCourses.set(courseString, courseObj);
-      }
+      this.selectedCourseNames.add(courseString)
       console.log(courseString, " has been added");
       return true;
     }
   }
+
+
+  async addSectionsToCourses(courseString:string)
+  {
+    let courseSections = await this.requester.getSearchResults(courseString);
+    // console.log(courseSections);
+    let pair: Array<string> = [];
+    pair = courseString.split(" ", 2);
+    //if the class has no schedule
+    if (courseSections[0]["c_hrstart"] == "" && courseSections.length == 1) {
+      //if class is unscheduled
+      let courseObj = new Course(pair[0], pair[1]);
+      this.unScheduledCourses.add(courseObj);
+    } else {
+      let courseObj = new Course(pair[0], pair[1]);
+      let item: any;
+
+      // console.log(courseString, courseSections);
+
+      for (item of courseSections) {
+        if (item["c_duration"] != "") {
+          let section = new Section(
+            item["class_nbr"],
+            item["mtg_days_1"],
+            item["c_hrstart"],
+            item["c_mnstart"],
+            item["c_duration"],
+            item["subject"],
+            item["catalog_nbr"],
+            item["instr_1"],
+            item["seats_text"],
+            item["seats_remaining"],
+            item["mtg_facility_1"]
+          );
+          if(item["seats_remaining"]==0)
+          {
+            this.filledSections.push(section)
+          }
+          else
+          {
+            courseObj.sections.push(section);
+          }
+        }
+      }
+      this.selectedCourses.set(courseString, courseObj);
+    }
+  }
+
+
+
 
   /**
    * Removes courseString from list of selected courses
@@ -173,9 +222,17 @@ export default class Scheduler {
   /** Generates all possible schedules based on courses in selectedCourses.
    *  - Stored results in scheduleList
    */
-  buildSchedules() {
+
+  //seats_remaining":"27"
+
+
+  async buildSchedules() {
+    this.filledSections = [];
     this.scheduleList = [];
+    this.selectedCourses = new Map<string, Course>();
     var markedNew = [];
+
+
 
     for (let item of this.marked) {
       markedNew.push(item);
@@ -183,6 +240,11 @@ export default class Scheduler {
 
     var classesAdded: Set<string> = new Set();
     var allSections = new Array();
+
+    for (let item  of this.selectedCourseNames){
+      await this.addSectionsToCourses(item)
+    }
+  
 
     // console.log("selected courses:", this.selectedCourses);
 

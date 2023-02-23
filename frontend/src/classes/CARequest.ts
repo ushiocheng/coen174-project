@@ -26,10 +26,11 @@ export default class CARequest {
   activeQuarter: string = ""; // The quarter used for any future searches
   activeQuarterID: number = 4300; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
+  career: string;
 
   /** Default quarter is Fall 2021 */
-  constructor(quarter = "Fall 2021") {
-    this.activeQuarter = quarter;
+  constructor() {
+    this.career = "ugrad";
     // this.getQuarters().then((quarterList) => {
     //   //resets the quarterList
     //   //and sets the active quarter
@@ -38,13 +39,13 @@ export default class CARequest {
     // });
   }
 
+  // Part of initialization, called from Scheduler.preLoad()
   async setQuarterList() {
-    await this.getQuarters().then((quarterList) => {
-      //resets the quarterList
-      this.quarterList = quarterList;
-      //sets the active quarter
-      this.setActiveQuarter(this.activeQuarter);
-    });
+    let quarterList = await this.getQuarters();
+    //resets the quarterList
+    this.quarterList = quarterList;
+    //sets the active quarter
+    this.setActiveQuarter("default");
   }
 
   async getQuarters(): Promise<Array<{ value: string; label: string }>> {
@@ -90,6 +91,15 @@ export default class CARequest {
     //sets the active quarter ID to the first if there were no matches
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
     this.activeQuarter = this.activeQuarter || this.quarterList[0].label;
+  }
+
+  setCareer(career: string): boolean {
+    let validCareers = ["ugrad", "grad", "all"];
+    if (validCareers.includes(career)) {
+      this.career = career;
+      return true;
+    }
+    return false;
   }
 
   async getSearchResults(query: string): Promise<
@@ -145,7 +155,7 @@ export default class CARequest {
     // Request query results from courseavail
     try {
       let response = await fetch(
-        `/courseavail/search/${this.activeQuarterID}/ugrad/${query}`
+        `/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
       );
       let queryMatches = await response.json();
       return queryMatches.results;
@@ -154,7 +164,7 @@ export default class CARequest {
       // console.error(error);
       // return [];
       let response = await fetch(
-        `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/ugrad/${query}`
+        `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
       );
       let queryMatches = await response.json();
       return queryMatches.results;
@@ -173,7 +183,7 @@ export default class CARequest {
     // Request all coursed being offered for the quarter from courseavail
     try {
       let response = await fetch(
-        `/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
+        `/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
       );
       let allCourses = await response.json();
       // console.log("response:", allCourses);
@@ -183,7 +193,7 @@ export default class CARequest {
       // console.error(error);
       // return [];
       let response = await fetch(
-        `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
+        `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
       );
       let allCourses = await response.json();
       // console.log("response:", allCourses);

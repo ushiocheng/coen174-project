@@ -111,6 +111,18 @@ export default class Scheduler {
     this.unScheduledCourses.clear();
   }
 
+  /** Switches the career that will be used for course searches
+   * @param career
+   * Valid arguments:
+   * - "ugrad": undergraduate courses only
+   * - "grad":  graduate courses only
+   * - "all":   all courses
+   */
+  async changeCareer(career: string) {
+    this.requester.setCareer(career);
+    await this.updateClassList();
+  }
+
   async updateClassList() {
     this.classList = new Set();
 

@@ -52,6 +52,8 @@ export default class Scheduler {
   //list of schedules
   scheduleList: Array<Array<Section>>;
 
+  waitListSchedules: Array<Array<Section>>;
+
   //minimum time in between classes or other activities thet user adds
   buffer: number;
   marked: { startTime: Date; endTime: Date }[][];
@@ -82,6 +84,8 @@ export default class Scheduler {
     //list of working schedules
     //list of list of sections
     this.scheduleList = new Array();
+
+    this.waitListSchedules = new Array();
   }
 
   //the start and end time should be
@@ -94,6 +98,7 @@ export default class Scheduler {
   createBuffer(buff: number) {
     this.buffer = buff;
     this.scheduleList = new Array();
+    this.waitListSchedules = new Array();
   }
 
   /** Switches the quarter that will be used for course searches and
@@ -105,6 +110,7 @@ export default class Scheduler {
     this.selectedCourses = new Map();
     this.selectedCourseNames = new Set();
     this.scheduleList = new Array();
+    this.waitListSchedules  = new Array();
     this.filledSections = new Array();
     await this.updateClassList();
     this.selectedCourses.clear();
@@ -194,10 +200,7 @@ export default class Scheduler {
           {
             this.filledSections.push(section)
           }
-          else
-          {
-            courseObj.sections.push(section);
-          }
+          courseObj.sections.push(section);
         }
       }
       this.selectedCourses.set(courseString, courseObj);
@@ -238,9 +241,11 @@ export default class Scheduler {
   //seats_remaining":"27"
 
 
+  
   async buildSchedules() {
     this.filledSections = [];
     this.scheduleList = [];
+    this.waitListSchedules =[];
     this.selectedCourses = new Map<string, Course>();
     var markedNew = [];
 
@@ -274,6 +279,9 @@ export default class Scheduler {
     }
     createSectionsByDay(sectionsByDay, allSections);
     // console.log("sections by day", sectionsByDay);
+
+
+    //this should be changes to take a maximum number of classes variable
     expand(
       this.buffer,
       0,
@@ -286,5 +294,27 @@ export default class Scheduler {
       [],
       this.scheduleList
     );
+
+      for(let lst of this.scheduleList)
+      {
+        let available = true
+        for(let item of lst)
+        {
+          //why are there negative values for this
+          //asusming negative values mean that the class is full
+          if(item.remainingSeats <= 0)
+          {
+            available = false
+            break
+          } 
+        }
+        if(!available)
+        {
+          this.waitListSchedules.push(lst)
+        }
+
+
+      }
+
   }
 }

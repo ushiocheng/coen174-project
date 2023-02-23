@@ -17,6 +17,7 @@ export default class Section {
   endTime: Date;
   subject: string;
   catalog_nbr: string;
+  remainingSeats: number;
   constructor(
     sectionID: number,
     mtgDays: string,
@@ -39,6 +40,7 @@ export default class Section {
     this.endTime = new Date(this.startTime.getTime() + duration * 60 * 1000);
     this.subject = subject;
     this.catalog_nbr = catalog_nbr;
+    this.remainingSeats =remainingSeats;
   }
 }
 

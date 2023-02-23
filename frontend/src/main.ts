@@ -70,6 +70,8 @@ let scheduler = new Scheduler();
     console.log(scheduler.scheduleList);
     console.log("filled sections:")
     console.log(scheduler.filledSections)
+    console.log("filled Schedules:")
+    console.log(scheduler.waitListSchedules)
   
     console.log("Gap between classes: 90 minutes")
     scheduler.createBuffer(90)
@@ -78,6 +80,8 @@ let scheduler = new Scheduler();
     console.log(scheduler.scheduleList);
     console.log("filled sections:")
     console.log(scheduler.filledSections)
+    console.log("filled Schedules:")
+    console.log(scheduler.waitListSchedules)
   
     console.log("Gap between classes: 270 minutes")
     scheduler.createBuffer(270)
@@ -86,6 +90,8 @@ let scheduler = new Scheduler();
     console.log(scheduler.scheduleList);
     console.log("filled sections:")
     console.log(scheduler.filledSections)
+    console.log("filled Schedules:")
+    console.log(scheduler.waitListSchedules)
   
     const end = Date.now();
     console.log("runtime: " + (end - start) / 1000);

@@ -32,6 +32,7 @@ export default class Scheduler {
 
   //make requests to scu
   requester: CARequest;
+  maxClasses: number;
 
   //array of sections that are full capacity
   //this can eventually be integrated into a wait list verison
@@ -59,6 +60,7 @@ export default class Scheduler {
   marked: { startTime: Date; endTime: Date }[][];
 
   constructor() {
+    this.maxClasses = -1
     this.buffer = 0;
     this.marked = [[], [], [], [], []];
     //a list of class strings
@@ -221,6 +223,19 @@ export default class Scheduler {
     return this.selectedCourses.delete(courseString);
   }
 
+  chooseNumberOfCLasses(maxClasses: number)
+  {
+    if(maxClasses>0)
+    {
+      this.maxClasses = maxClasses
+      console.log("number of classes selected")
+    }
+    else
+    {
+      console.log("must have more than zero classes!")
+    }
+  }
+
   // filterScheduled()
   // {
   //     this.unScheduled = this.jsonList.filter(function (el)
@@ -282,12 +297,22 @@ export default class Scheduler {
 
 
     //this should be changes to take a maximum number of classes variable
+    let NofClasses = 0
+    if(this.maxClasses==-1)
+    {
+      NofClasses = this.selectedCourses.size
+    }
+    else
+    {
+      NofClasses =this.maxClasses
+    }
+
     expand(
       this.buffer,
       0,
       markedNew,
       0,
-      this.selectedCourses.size,
+      NofClasses,
       new Date(`2001-01-01 00:00`),
       sectionsByDay,
       classesAdded,

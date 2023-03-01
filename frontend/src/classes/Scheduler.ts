@@ -32,6 +32,7 @@ export default class Scheduler {
 
   //make requests to scu
   requester: CARequest;
+  maxClasses: number;
 
   //array of sections that are full capacity
   //this can eventually be integrated into a wait list verison
@@ -52,11 +53,14 @@ export default class Scheduler {
   //list of schedules
   scheduleList: Array<Array<Section>>;
 
+  waitListSchedules: Array<Array<Section>>;
+
   //minimum time in between classes or other activities thet user adds
   buffer: number;
   marked: { startTime: Date; endTime: Date }[][];
 
   constructor() {
+    this.maxClasses = -1
     this.buffer = 0;
     this.marked = [[], [], [], [], []];
     //a list of class strings
@@ -82,6 +86,8 @@ export default class Scheduler {
     //list of working schedules
     //list of list of sections
     this.scheduleList = new Array();
+
+    this.waitListSchedules = new Array();
   }
 
   //the start and end time should be
@@ -94,6 +100,7 @@ export default class Scheduler {
   createBuffer(buff: number) {
     this.buffer = buff;
     this.scheduleList = new Array();
+    this.waitListSchedules = new Array();
   }
 
   /** Switches the quarter that will be used for course searches and
@@ -105,6 +112,7 @@ export default class Scheduler {
     this.selectedCourses = new Map();
     this.selectedCourseNames = new Set();
     this.scheduleList = new Array();
+    this.waitListSchedules  = new Array();
     this.filledSections = new Array();
     await this.updateClassList();
     this.selectedCourses.clear();
@@ -194,10 +202,7 @@ export default class Scheduler {
           {
             this.filledSections.push(section)
           }
-          else
-          {
-            courseObj.sections.push(section);
-          }
+          courseObj.sections.push(section);
         }
       }
       this.selectedCourses.set(courseString, courseObj);
@@ -216,6 +221,19 @@ export default class Scheduler {
   removeCourse(courseString: string): boolean {
     courseString = courseString.toUpperCase();
     return this.selectedCourses.delete(courseString);
+  }
+
+  chooseNumberOfCLasses(maxClasses: number)
+  {
+    if(maxClasses>0)
+    {
+      this.maxClasses = maxClasses
+      console.log("number of classes selected")
+    }
+    else
+    {
+      console.log("must have more than zero classes!")
+    }
   }
 
   // filterScheduled()
@@ -238,9 +256,11 @@ export default class Scheduler {
   //seats_remaining":"27"
 
 
+  
   async buildSchedules() {
     this.filledSections = [];
     this.scheduleList = [];
+    this.waitListSchedules =[];
     this.selectedCourses = new Map<string, Course>();
     var markedNew = [];
 
@@ -274,17 +294,52 @@ export default class Scheduler {
     }
     createSectionsByDay(sectionsByDay, allSections);
     // console.log("sections by day", sectionsByDay);
+
+
+    //this should be changes to take a maximum number of classes variable
+    let NofClasses = 0
+    if(this.maxClasses==-1)
+    {
+      NofClasses = this.selectedCourses.size
+    }
+    else
+    {
+      NofClasses =this.maxClasses
+    }
+
     expand(
       this.buffer,
       0,
       markedNew,
       0,
-      this.selectedCourses.size,
+      NofClasses,
       new Date(`2001-01-01 00:00`),
       sectionsByDay,
       classesAdded,
       [],
       this.scheduleList
     );
+
+      for(let lst of this.scheduleList)
+      {
+        let available = true
+        for(let item of lst)
+        {
+          //why are there negative values for this
+          //asusming negative values mean that the class is full
+          if(item.remainingSeats <= 0)
+          {
+            available = false
+            break
+          } 
+        }
+        if(!available)
+        {
+          this.waitListSchedules.push(lst)
+        }
+
+
+      }
+
   }
 }

@@ -46,6 +46,7 @@ export default class Section {
     this.endTime = new Date(this.startTime.getTime() + duration * 60 * 1000);
     this.subject = subject;
     this.catalog_nbr = catalog_nbr;
+    this.remainingSeats = remainingSeats;
     this.professor = professor;
     this.status = status;
     this.remainingSeats = remainingSeats;

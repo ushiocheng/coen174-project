@@ -2,7 +2,7 @@
   <div style="border: 1px solid red; margin: 10px">
     <p>CoursesEditor</p>
     <course-list :courses="courses" />
-    <course-picker />
+    <course-picker @addCourse="(c) => {addCourse(c);}" />
   </div>
 </template>
 
@@ -14,7 +14,8 @@ import Course from "@/classes/Course";
 //* Example Code
 const exampleCourse1: Course = new Course("COEN", "123");
 const exampleCourse2: Course = new Course("COEN", "456");
-let courses: Array<Course> = [exampleCourse1, exampleCourse2];
+const exampleCourse3: Course = new Course("COEN", "123");
+let courses: Array<Course> = [exampleCourse1, exampleCourse2, exampleCourse3];
 // let courses: Array<Course> = [];
 
 export default {
@@ -23,6 +24,13 @@ export default {
     return {
       courses,
     };
+  },
+  methods: {
+    addCourse(courseName: string) {
+      const dept = courseName.split(" ")[0];
+      const num = courseName.substring(dept.length + 1);
+      courses.push(new Course(dept, num));
+    },
   },
 };
 </script>

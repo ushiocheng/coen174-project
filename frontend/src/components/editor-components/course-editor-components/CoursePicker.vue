@@ -4,10 +4,10 @@
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field label="Course Name"></v-text-field>
+          <v-text-field label="Course Name" v-model="courseName"></v-text-field>
         </v-col>
         <v-col cols="12" sm="12" md="4">
-          <v-btn @click="console.log('[WARN] add course not implemented.')"
+          <v-btn @click="$emit('addCourse', courseName)"
             >Add Course</v-btn
           >
         </v-col>
@@ -22,6 +22,11 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "CoursePicker",
   setup() {},
+  data() {
+    return {
+      courseName: ""
+    }
+  }
 });
 </script>
 

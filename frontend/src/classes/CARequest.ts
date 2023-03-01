@@ -200,4 +200,23 @@ export default class CARequest {
       return allCourses.results;
     }
   }
+
+  async getSectionInfo(sectionID: string): Promise<any> {
+    try {
+      let response = await fetch(
+        `/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
+      );
+      let sectionInfo = await response.json();
+      return sectionInfo.results[0];
+    } catch (error) {
+      /* TEMP FOR TESTING */
+      // console.error(error);
+      // return [];
+      let response = await fetch(
+        `https://www.scu.edu/apps/ws/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
+      );
+      let sectionInfo = await response.json();
+      return sectionInfo.results[0];
+    }
+  }
 }

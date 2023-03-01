@@ -3,14 +3,16 @@
     <p>Main View</p>
     <editor />
     <schedule-chooser />
+    <timetable />
   </div>
 </template>
 
 <script lang="ts">
 import Editor from "@/components/Editor.vue";
 import ScheduleChooser from "@/components/ScheduleChooser.vue";
+import timetable from "@/components/timetable.vue";
 export default {
-  components: { Editor, ScheduleChooser },
+  components: { Editor, ScheduleChooser, timetable },
 };
 </script>
 

@@ -73,7 +73,7 @@ export default class CARequest {
       // console.error(error);
       // return [];
       let response = await fetch(
-        "https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/"
+        "https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/"
       );
       let quarters = (await response.json()) as CAQuarterList;
       return quarters.results.indb;
@@ -164,7 +164,7 @@ export default class CARequest {
       // console.error(error);
       // return [];
       let response = await fetch(
-        `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
+        `https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
       );
       let queryMatches = await response.json();
       return queryMatches.results;
@@ -193,7 +193,7 @@ export default class CARequest {
       // console.error(error);
       // return [];
       let response = await fetch(
-        `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
+        `https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
       );
       let allCourses = await response.json();
       // console.log("response:", allCourses);

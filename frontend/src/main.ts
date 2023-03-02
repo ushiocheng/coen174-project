@@ -35,7 +35,7 @@ let scheduler = new Scheduler();
     scheduler.addCourse("PSYC 1");
     scheduler.addCourse("ENGL 28");
     scheduler.addCourse("ACTG 131");
-    console.log("courses added: ", scheduler.selectedCourses);
+    console.log("courses added: ", scheduler.selectedCourseNames);
     console.log("Generating schedules for Spring 2023:");
     await scheduler.buildSchedules();
     console.log(scheduler.scheduleList);
@@ -48,7 +48,7 @@ let scheduler = new Scheduler();
     scheduler.addCourse("PSYC 1");
     scheduler.addCourse("ENGL 28");
     scheduler.addCourse("ACTG 131");
-    console.log("courses added: ", scheduler.selectedCourses);
+    console.log("courses added: ", scheduler.selectedCourseNames);
     console.log("Generating schedules for Winter 2023:");
     await scheduler.buildSchedules();
     console.log(scheduler.scheduleList);
@@ -61,7 +61,7 @@ let scheduler = new Scheduler();
     scheduler.addCourse("PSYC 1");
     scheduler.addCourse("ENGL 28");
     scheduler.addCourse("ACTG 131");
-    console.log("courses added: ", scheduler.selectedCourses);
+    console.log("courses added: ", scheduler.selectedCourseNames);
 
     console.log("Gap between classes: 30 minutes")
     scheduler.createBuffer(30)

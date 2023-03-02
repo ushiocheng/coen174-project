@@ -3,6 +3,10 @@ import Course from "./Course";
 import CARequest from "./CARequest";
 import Section from "./Section";
 
+//consider using environmental variables to store port numbers for local host and proxy server
+//note: vites is the proxy server
+//remember to use docker build then use npm run dev command
+
 //should there be a limit to the amount of units to take?
 //can there be no cap on the number of classes with no schedule
 //note: you cant import typescript files into javascript
@@ -18,7 +22,7 @@ import Section from "./Section";
 
 
 
-
+//should test
 
 export default class Scheduler {
 

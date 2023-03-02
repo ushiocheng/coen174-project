@@ -45,3 +45,13 @@ test("change career", async () => {
   requester.setCareer("myCareer");
   expect(requester.career).toBe("grad");
 });
+
+test("get section info", async () => {
+  let requester = new CARequest();
+  await requester.setQuarterList();
+
+  requester.setActiveQuarter("Spring 2023");
+  let info = await requester.getSectionInfo("59657");
+
+  console.log(info);
+});

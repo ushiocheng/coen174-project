@@ -22,6 +22,8 @@
         > req.setActiveQuarter("Spring 2023");
 */
 
+
+
 export default class CARequest {
   activeQuarter: string = ""; // The quarter used for any future searches
   activeQuarterID: number = 4300; // The ID of the quarter, for part of the fetch request
@@ -72,9 +74,13 @@ export default class CARequest {
       /* TEMP FOR TESTING */
       // console.error(error);
       // return [];
+      // let response = await fetch(
+      //   //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/
+      //   "https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/"
+      // );
       let response = await fetch(
         //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/
-        "https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/"
+        "/courseavail/autocomplete/quarters/"
       );
       let quarters = (await response.json()) as CAQuarterList;
       return quarters.results.indb;
@@ -164,9 +170,13 @@ export default class CARequest {
       /* TEMP FOR TESTING */
       // console.error(error);
       // return [];
+      // let response = await fetch(
+      //   //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}
+      //   `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
+      // );
       let response = await fetch(
         //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}
-        `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
+        `/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
       );
       let queryMatches = await response.json();
       return queryMatches.results;
@@ -194,9 +204,13 @@ export default class CARequest {
       /* TEMP FOR TESTING */
       // console.error(error);
       // return [];
+      // let response = await fetch(
+      //   //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses
+      //   `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
+      // );
       let response = await fetch(
         //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses
-        `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
+        `/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
       );
       let allCourses = await response.json();
       // console.log("response:", allCourses);
@@ -215,8 +229,11 @@ export default class CARequest {
       /* TEMP FOR TESTING */
       // console.error(error);
       // return [];
+      // let response = await fetch(
+      //   `https://www.scu.edu/apps/ws/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
+      // );
       let response = await fetch(
-        `https://www.scu.edu/apps/ws/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
+        `/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
       );
       let sectionInfo = await response.json();
       return sectionInfo.results[0];

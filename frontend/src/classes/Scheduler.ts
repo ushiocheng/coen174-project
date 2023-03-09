@@ -4,7 +4,6 @@ import CARequest from "./CARequest";
 import Section from "./Section";
 
 //consider using environmental variables to store port numbers for local host and proxy server
-//note: vites is the proxy server
 //remember to use docker build then use npm run dev command
 
 //should there be a limit to the amount of units to take?

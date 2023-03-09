@@ -2,6 +2,8 @@
 import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
+
+
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
@@ -37,5 +39,12 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: {
+      "/api": {
+        target: "https://www.scu.edu/apps/ws/courseavail",
+        changeOrigin: true,
+        secure: false,
+      }
+    },
   },
 })

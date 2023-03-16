@@ -2,8 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "esnext",
+    "allowJs": true,
     "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
+    "strictPropertyInitialization": false,
     "composite": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -27,5 +29,5 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "vite.config.ts"
-  ]
+  ],
 }

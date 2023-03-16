@@ -7,7 +7,12 @@
           v-for="(course, index) in courses"
           :key="index"
           :course="course"
-          @deleteCourse="courses.splice(index, 1)"
+          @deleteCourse="
+            (name: string) => {
+              profiles.removeCourse(name);
+              courses.splice(index, 1);
+            }
+          "
         />
       </v-list>
     </v-container>
@@ -19,6 +24,7 @@ import { defineComponent } from "vue";
 import CoursePicker from "./CoursePicker.vue";
 import CourseListItem from "./CourseListItem.vue";
 import Course from "@/classes/Course";
+import ProfileSwitcher from "@/classes/ProfileSwitcher";
 
 export default defineComponent({
   name: "CourseList",
@@ -27,6 +33,10 @@ export default defineComponent({
     CourseListItem,
   },
   props: {
+    profiles: {
+      type: ProfileSwitcher,
+      required: true,
+    },
     courses: {
       type: Array<Course>,
       required: true,

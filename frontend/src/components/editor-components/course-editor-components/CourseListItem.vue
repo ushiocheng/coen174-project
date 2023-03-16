@@ -12,7 +12,12 @@
         }}</v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action>
-        <v-btn @click="$emit('deleteCourse')">X</v-btn>
+        <v-btn
+          @click="
+            () => $emit('deleteCourse', `${course.subject} ${course.courseID}`)
+          "
+          >X</v-btn
+        >
       </v-list-item-action>
     </v-list-item>
   </div>

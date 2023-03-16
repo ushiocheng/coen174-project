@@ -7,7 +7,7 @@
           <v-text-field label="Course Name" v-model="courseName"></v-text-field>
         </v-col>
         <v-col cols="12" sm="12" md="4">
-          <v-btn @click="$emit('addCourse', courseName)"
+          <v-btn @click="() => $emit('addCourse', courseName.toUpperCase())"
             >Add Course</v-btn
           >
         </v-col>
@@ -24,9 +24,9 @@ export default defineComponent({
   setup() {},
   data() {
     return {
-      courseName: ""
-    }
-  }
+      courseName: "",
+    };
+  },
 });
 </script>
 

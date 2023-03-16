@@ -9,6 +9,9 @@ class NoTimeConflict implements Rule {
         console.log(s); // Log s to prevent unused var warning
         return false;
     }
+    toString(): String {
+        return `Min time between class: ${this._minBetweenClass} min`;
+    }
     constructor(minBetweenClass:number) {
         this._minBetweenClass = minBetweenClass;
     }

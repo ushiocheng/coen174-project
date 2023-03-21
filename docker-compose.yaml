@@ -5,21 +5,11 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
         ports:
-            - "80:80"   # Outbound traffic on port 80
-                        # TODO: change to ssh on deploy
-        networks:
-            - main-internal-network
-        restart: unless-stopped
-        depends_on:
-            - backend-node
-    backend-node:
-        build:
-            context: ./backend
-            dockerfile: Dockerfile
+            - "80:80"   # Listening on port 80
         networks:
             - main-internal-network
         restart: unless-stopped
 networks:
-    # Cross Application Networks
+    # Application Network
     main-internal-network:
         driver: bridge

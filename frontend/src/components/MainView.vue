@@ -13,7 +13,7 @@
       "
       :validSchedules="validSchedules"
     />
-    <timetable />
+    <!--<timetable />-->
   </div>
 </template>
 

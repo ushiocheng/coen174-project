@@ -12,7 +12,7 @@
   background-color: white;
   color: black;
   font-size: xx-large;
-  height: 11%;
+  height: 9%;
   justify-content: center;
 }
 </style>

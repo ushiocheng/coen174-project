@@ -15,17 +15,27 @@ export default class Section {
   //! Both time are date object on the day of 2001-01-01
   startTime: Date;
   endTime: Date;
+
   subject: string;
+  professor: string;
+  location: string;
+
+  remainingSeats: number;
+  status: string;
+
   catalog_nbr: string;
   constructor(
-    course: Course,
     sectionID: number,
     mtgDays: string,
     startHr: string,
     startMn: string,
     duration: number,
     subject: string,
-    catalog_nbr: string
+    catalog_nbr: string,
+    professor: string,
+    status: string,
+    remainingSeats: number,
+    location: string
   ) {
     // this.clsInfo = course;
     this.sectionID = sectionID;
@@ -36,6 +46,11 @@ export default class Section {
     this.endTime = new Date(this.startTime.getTime() + duration * 60 * 1000);
     this.subject = subject;
     this.catalog_nbr = catalog_nbr;
+    this.remainingSeats = remainingSeats;
+    this.professor = professor;
+    this.status = status;
+    this.remainingSeats = remainingSeats;
+    this.location = location;
   }
 }
 

@@ -19,25 +19,80 @@ registerPlugins(app);
 
 app.mount("#app");
 
-/*Testing*/
-import Scheduler from "./classes/Scheduler";
+// import Scheduler from "./classes/Scheduler";
 
-let scheduler = new Scheduler();
+// let scheduler = new Scheduler();
 
-(async () => {
-  const start = Date.now();
-  await scheduler.preLoad();
+// // Look into frontend/test for examples on how to use each class
+// (async () => {
+//     const start = Date.now();
+//     await scheduler.preLoad();
 
-  await scheduler.addCourse("ACTG 131"); // Returns true if successfully added, false otherwise
-  await scheduler.addCourse("ACTG 136");
-  await scheduler.addCourse("AMTH 106");
-  await scheduler.addCourse("AMTH 108");
+//     console.log("Spring 2023:")
+//     await scheduler.changeQuarter("Spring 2023");
+//     //ANTH 11A MATH 9
+//     scheduler.addCourse("ANTH 11A");
+//     scheduler.addCourse("PSYC 1");
+//     scheduler.addCourse("ENGL 28");
+//     scheduler.addCourse("ACTG 131");
+//     console.log("courses added: ", scheduler.selectedCourseNames);
+//     console.log("Generating schedules for Spring 2023:");
+//     await scheduler.buildSchedules();
+//     console.log(scheduler.scheduleList);
+//     console.log("filled sections:")
+//     console.log(scheduler.filledSections)
 
-  console.log("Generating schedules for:");
-  console.log(scheduler.selectedCourses);
-  scheduler.buildSchedules();
-  console.log(scheduler.scheduleList);
+//     console.log("Winter 2023:")
+//     await scheduler.changeQuarter("Winter 2023");
+//     scheduler.addCourse("ANTH 11A");
+//     scheduler.addCourse("PSYC 1");
+//     scheduler.addCourse("ENGL 28");
+//     scheduler.addCourse("ACTG 131");
+//     console.log("courses added: ", scheduler.selectedCourseNames);
+//     console.log("Generating schedules for Winter 2023:");
+//     await scheduler.buildSchedules();
+//     console.log(scheduler.scheduleList);
+//     console.log("filled sections:")
+//     console.log(scheduler.filledSections)
 
-  const end = Date.now();
-  console.log("runtime: " + (end - start) / 1000);
-})();
+//     console.log("Fall 2022:")
+//     await scheduler.changeQuarter("Fall 2022");
+//     scheduler.addCourse("ANTH 11A");
+//     scheduler.addCourse("PSYC 1");
+//     scheduler.addCourse("ENGL 28");
+//     scheduler.addCourse("ACTG 131");
+//     console.log("courses added: ", scheduler.selectedCourseNames);
+
+//     console.log("Gap between classes: 30 minutes")
+//     scheduler.createBuffer(30)
+//     await scheduler.buildSchedules();
+//     console.log("Generating schedules for Fall 2022:")
+//     console.log(scheduler.scheduleList);
+//     console.log("filled sections:")
+//     console.log(scheduler.filledSections)
+//     console.log("filled Schedules:")
+//     console.log(scheduler.waitListSchedules)
+
+//     console.log("Gap between classes: 90 minutes")
+//     scheduler.createBuffer(90)
+//     await scheduler.buildSchedules();
+//     console.log("Generating schedules for Fall 2022:")
+//     console.log(scheduler.scheduleList);
+//     console.log("filled sections:")
+//     console.log(scheduler.filledSections)
+//     console.log("filled Schedules:")
+//     console.log(scheduler.waitListSchedules)
+
+//     console.log("Gap between classes: 270 minutes")
+//     scheduler.createBuffer(270)
+//     await scheduler.buildSchedules();
+//     console.log("Generating schedules for Fall 2022:")
+//     console.log(scheduler.scheduleList);
+//     console.log("filled sections:")
+//     console.log(scheduler.filledSections)
+//     console.log("filled Schedules:")
+//     console.log(scheduler.waitListSchedules)
+
+//     const end = Date.now();
+//     console.log("runtime: " + (end - start) / 1000);
+//   })();

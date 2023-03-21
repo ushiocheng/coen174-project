@@ -1,13 +1,38 @@
 /*  Course Avail Request object */
 
+const G_FRONTEND_PROXY_URL_BASE = "/courseavail";
+const G_COURSEAVAIL_URL_BASE = "https://www.scu.edu/apps/ws/courseavail";
+
+const fetchCourseAvail = async (relativeURL: string): Promise<any> => {
+  if (!relativeURL.startsWith("/")) {
+    console.error(
+      "[WARN] fetchCourseAvail() called with incorrect parameter format."
+    );
+    relativeURL = `/${relativeURL}`;
+  }
+  try {
+    let response = await fetch(`${G_FRONTEND_PROXY_URL_BASE}${relativeURL}`);
+    return await response.json();
+  } catch (error) {
+    /* Try courseavail url */
+    // console.error(error);
+    // return [];
+    let response = await fetch(`${G_COURSEAVAIL_URL_BASE}${relativeURL}`);
+    return await response.json();
+  }
+  // Otherwise fail explicitly
+  // todo: alert
+  return {};
+};
+
 /*  FUNCTIONS
     setActiveQuarter(quarter)       changes which quarter will be used for queries
                                     (valid params: "Fall 2021", "Summer 2022", etc.)
     async getSearchResults(query)   returns a list of all the section that match the query,
                                     or an empty array if it failed
-    async getCourseList()           returns a list of all courses being offered, or an 
+    async getCourseList()           returns a list of all courses being offered, or an
                                     empty array if it failed (use this to autofill the user's input)
-    async getQuarters()             returns a list of all quarters and their id's, or an 
+    async getQuarters()             returns a list of all quarters and their id's, or an
                                     empty array if it failed
 */
 
@@ -24,15 +49,13 @@
 
 export default class CARequest {
   activeQuarter: string = ""; // The quarter used for any future searches
-  activeQuarterID: number = 4420; // The ID of the quarter, for part of the fetch request
+  activeQuarterID: number = 4440; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
+  career: string;
 
-  //this cannot be in the constrcutor!!!
-  //there is async calls within
-
-  constructor(quarter = "default") {
-    // //isn't this redundant?
-    this.activeQuarter = quarter;
+  /** Default quarter is Fall 2021 */
+  constructor() {
+    this.career = "ugrad";
     // this.getQuarters().then((quarterList) => {
     //   //resets the quarterList
     //   //and sets the active quarter
@@ -41,13 +64,13 @@ export default class CARequest {
     // });
   }
 
+  // Part of initialization, called from Scheduler.preLoad()
   async setQuarterList() {
-    await this.getQuarters().then((quarterList) => {
-      //resets the quarterList
-      this.quarterList = quarterList;
-      //sets the active quarter
-      this.setActiveQuarter(this.activeQuarter);
-    });
+    let quarterList = await this.getQuarters();
+    //resets the quarterList
+    this.quarterList = quarterList;
+    //sets the active quarter
+    this.setActiveQuarter("default");
   }
 
   async getQuarters(): Promise<Array<{ value: string; label: string }>> {
@@ -65,15 +88,10 @@ export default class CARequest {
     };
 
     // If it is not cached, retrieve from courseavail
-    try {
-      let response = await fetch("/courseavail/autocomplete/quarters/");
-      let quarters = (await response.json()) as CAQuarterList;
-      // console.log("Quarters:", quarters.results.indb);
-      return quarters.results.indb;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const response = await fetchCourseAvail("/autocomplete/quarters/");
+    let quarters = response as CAQuarterList;
+    // console.log("Quarters:", quarters.results.indb);
+    return quarters.results.indb;
   }
 
   setActiveQuarter(quarter: string) {
@@ -86,6 +104,16 @@ export default class CARequest {
     });
     //sets the active quarter ID to the first if there were no matches
     this.activeQuarterID = this.activeQuarterID || this.quarterList[0].value;
+    this.activeQuarter = this.activeQuarter || this.quarterList[0].label;
+  }
+
+  setCareer(career: string): boolean {
+    let validCareers = ["ugrad", "grad", "all"];
+    if (validCareers.includes(career)) {
+      this.career = career;
+      return true;
+    }
+    return false;
   }
 
   async getSearchResults(query: string): Promise<
@@ -139,16 +167,11 @@ export default class CARequest {
     }>
   > {
     // Request query results from courseavail
-    try {
-      let response = await fetch(
-        `/courseavail/search/${this.activeQuarterID}/ugrad/${query}`
-      );
-      let queryMatches = await response.json();
-      return queryMatches.results;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    const response = await fetchCourseAvail(
+      `/search/${this.activeQuarterID}/${this.career}/${query}`
+    );
+    let queryMatches = response;
+    return queryMatches.results;
   }
 
   async getCourseList(): Promise<
@@ -161,16 +184,20 @@ export default class CARequest {
     }>
   > {
     // Request all coursed being offered for the quarter from courseavail
-    try {
-      let response = await fetch(
-        `/courseavail/autocomplete/${this.activeQuarterID}/ugrad/courses`
-      );
-      let allCourses = await response.json();
-      // console.log("response:", allCourses);
-      return allCourses.results;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+
+    let response = await fetchCourseAvail(
+      `/autocomplete/${this.activeQuarterID}/${this.career}/courses`
+    );
+    let allCourses = response;
+    // console.log("response:", allCourses);
+    return allCourses.results;
+  }
+
+  async getSectionInfo(sectionID: string): Promise<any> {
+    return (
+      await fetchCourseAvail(
+        `/details/${this.activeQuarterID}/${this.career}/${sectionID}`
+      )
+    ).results[0];
   }
 }

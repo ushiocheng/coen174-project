@@ -36,12 +36,27 @@ function compareFn(s1: any, s2: any) {
   }
   return 0;
 }
+//intregrate  buffer
+function findIntersect(
+  buffer: number,
+  s1: Section,
+  s2: { startTime: Date; endTime: Date }
+) {
+  // var temp = new Date(`2001-01-01 00:00`)
+  // var temp2 = new Date(`2001-01-01 00:00`);
+  // temp.setMinutes(buffer)
 
-function findIntersect(s1: Section, s2: { startTime: Date; endTime: Date }) {
-  if (s1.startTime < s2.startTime && s1.endTime > s2.startTime) {
+  // var end1 = new Date(s1.endTime.getTime()+temp.getTime() - temp2.getTime())
+  // var end2 = new Date(s2.endTime.getTime()+temp.getTime() - temp2.getTime())
+
+  //changes:
+  var end1 = new Date(s1.endTime.getTime() + buffer * 60000);
+  var end2 = new Date(s2.endTime.getTime() + buffer * 60000);
+
+  if (s1.startTime < s2.startTime && end1 > s2.startTime) {
     return true;
   }
-  if (s2.startTime < s1.startTime && s2.endTime > s1.startTime) {
+  if (s2.startTime < s1.startTime && end2 > s1.startTime) {
     return true;
   }
 
@@ -68,14 +83,13 @@ function markedCopy(l1: any, l2: any) {
   for (let i = 0; i < 5; i++) {
     l2.push([]);
     for (let j = 0; j < l1[i].length; j++) {
-      l2[i].push([]);
-      l2[i][j].push(l1[i][j][0]);
-      l2[i][j].push(l1[i][j][1]);
+      l2[i].push({ startTime: l1[i][j].startTime, endTime: l1[i][j].endTime });
     }
   }
 }
 
 function expand(
+  buffer: number,
   day: number,
   marked: Array<Array<{ startTime: Date; endTime: Date }>>,
   index: number,
@@ -110,14 +124,20 @@ function expand(
         let intersect = false;
 
         for (let pair of marked[i]) {
-          if (findIntersect(sections[j], pair)) {
+          if (findIntersect(buffer, sections[j], pair)) {
             intersect = true;
           }
         }
 
+        // console.log(latestClassEnding)
+
+        var threshold = new Date(latestClassEnding.getTime() + buffer * 60000);
+
+        // console.log(threshold)
+
         if (
           !intersect &&
-          latestClassEnding <= sections[j].startTime &&
+          threshold <= sections[j].startTime &&
           !classesAdded.has(sections[j].subject + sections[j].catalog_nbr)
         ) {
           var tempOrder = [];
@@ -128,7 +148,7 @@ function expand(
 
           //   sectionListCopy(classOrder, tempOrder);
           for (let i = 0; i < classOrder.length; i++)
-            tempOrder.push(structuredClone(classOrder[i]));
+            tempOrder.push(JSON.parse(JSON.stringify(classOrder[i])));
 
           classesCopy(classesAdded, tempClasses);
           markedCopy(marked, tempMarked);
@@ -141,19 +161,20 @@ function expand(
             if (
               sections[j].haveClassIn[`${days[k]}` as keyof dayList] &&
               !marked[k].includes({
-                startTime: sections[j].startTime,
-                endTime: sections[j].endTime,
+                startTime: new Date(sections[j].startTime),
+                endTime: new Date(sections[j].endTime),
               })
             ) {
               tempMarked[k].push({
-                startTime: sections[j].startTime,
-                endTime: sections[j].endTime,
+                startTime: new Date(sections[j].startTime),
+                endTime: new Date(sections[j].endTime),
               });
             }
           }
 
           if (j == sections.length - 1) {
             expand(
+              buffer,
               i + 1,
               tempMarked,
               0,
@@ -166,6 +187,7 @@ function expand(
             );
           } else {
             expand(
+              buffer,
               i,
               tempMarked,
               j + 1,

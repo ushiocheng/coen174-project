@@ -1,13 +1,18 @@
 <template>
-  <div style="border: 1px solid red; margin: 10px">
-    <p>CoursesEditor/CourseList</p>
+  <div id="courselist" v-if="courses.length > 0">
+    <!-- <p>CoursesEditor/CourseList</p> -->
     <v-container>
       <v-list>
         <course-list-item
           v-for="(course, index) in courses"
           :key="index"
           :course="course"
-          @deleteCourse="courses.splice(index, 1)"
+          @deleteCourse="
+            (name: string) => {
+              profiles.removeCourse(name);
+              courses.splice(index, 1);
+            }
+          "
         />
       </v-list>
     </v-container>
@@ -19,6 +24,7 @@ import { defineComponent } from "vue";
 import CoursePicker from "./CoursePicker.vue";
 import CourseListItem from "./CourseListItem.vue";
 import Course from "@/classes/Course";
+import ProfileSwitcher from "@/classes/ProfileSwitcher";
 
 export default defineComponent({
   name: "CourseList",
@@ -27,6 +33,10 @@ export default defineComponent({
     CourseListItem,
   },
   props: {
+    profiles: {
+      type: ProfileSwitcher,
+      required: true,
+    },
     courses: {
       type: Array<Course>,
       required: true,
@@ -36,4 +46,12 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+#courselist {
+  /*border: 1px groove #9e1b32;*/
+  margin: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 5px;
+}
+</style>

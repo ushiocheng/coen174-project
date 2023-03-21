@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid red; margin: 10px">
+  <div id="courselist">
     <p>CoursesEditor/CourseList</p>
     <v-container>
       <v-list>
@@ -46,4 +46,11 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+#courselist{
+  /*border: 1px groove #9e1b32;*/
+  margin: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding:5px;
+}</style>

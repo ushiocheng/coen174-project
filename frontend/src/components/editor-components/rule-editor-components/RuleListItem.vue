@@ -1,5 +1,5 @@
 <template>
-  <div style="border:1px solid red; margin: 10px;">
+  <div id="rulelistitem">
     <p>RulesEditor/ListItem</p>
   </div>
 
@@ -11,6 +11,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+#rulelistitem{/*RuleListItem */
+  border: 1px solid #b30738; 
+  border-radius: 5px;
+  margin: 10px;
+  background-color:#e9e8d5;
+  width: 25%;
+}
 </style>

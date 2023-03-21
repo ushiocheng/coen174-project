@@ -1,5 +1,5 @@
 <template>
-  <div style="border:1px solid red; margin: 10px;">
+  <div id="rulelist">
     <p>RulesEditor/RuleList</p>
     <v-list>
         RuleListItem goes here
@@ -13,6 +13,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+#rulelist{/*RuleListItem */
+  border: 1px solid #b30738;/*can be deleted*/
+  border-radius: 5px;
+  margin: 10px;
+  background-color:#ffffff;
+  width: 25%;
+  padding: 5px;
+}
 </style>

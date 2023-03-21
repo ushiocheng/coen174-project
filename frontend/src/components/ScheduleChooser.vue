@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid red; margin: 10px">
+  <div id="schedulechooser">
     <p>component/ScheduleChooser</p>
     <schedule-viewer
       :profiles="profiles"
@@ -26,4 +26,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#schedulechooser{
+  border: 1px solid red; 
+  margin: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding:5px;
+}</style>

@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid blue; margin: 10px">
+  <div id="editor">
     <p>component/Editor.vue</p>
     <courses-editor :profiles="profiles" :courses="courses" />
     <rules-editor />
@@ -28,4 +28,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#editor{
+  margin: 10px;
+  border-radius: 5px;
+  padding:5px;
+}</style>

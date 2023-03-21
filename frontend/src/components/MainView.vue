@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid red; margin: 10px">
+  <div id="mainview">
     <p>Main View</p>
     <editor :profiles="profiles" :courses="courses" />
     <schedule-chooser
@@ -51,4 +51,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#mainview{
+  border: 1px solid red;
+  margin: 10px;
+  background-color: #b30738;
+  border-radius: 5px;
+  padding:5px;
+}
+</style>

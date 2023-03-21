@@ -1,6 +1,6 @@
 <template>
-  <div style="border: 1px solid red; margin: 10px">
-    <p>RulesEdutor</p>
+  <div id="ruleseditor">
+    <p>RulesEditor</p>
     <rule-list />
     <rule-editor />
   </div>
@@ -14,4 +14,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#ruleseditor{
+  border: 1px solid red; 
+  margin: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding:5px;
+}</style>

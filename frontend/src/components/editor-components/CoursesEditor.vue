@@ -3,6 +3,7 @@
     <p>CoursesEditor</p>
     <course-list :profiles="profiles" :courses="courses" />
     <course-picker
+      :profiles="profiles"
       @addCourse="
         (c) => {
           addCourse(c);

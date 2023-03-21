@@ -94,6 +94,10 @@ export default class ProfileSwitcher {
     return this.activeProfile.scheduleList;
   }
 
+  getClassList(): Set<string> {
+    return this.activeProfile.classList;
+  }
+
   // saveActiveProfile() {
   //   localStorage.setItem(
   //     this.activeProfileName,

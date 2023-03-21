@@ -1,6 +1,6 @@
 <template>
-  <div id="courselist">
-    <p>CoursesEditor/CourseList</p>
+  <div id="courselist" v-if="courses.length > 0">
+    <!-- <p>CoursesEditor/CourseList</p> -->
     <v-container>
       <v-list>
         <course-list-item
@@ -47,10 +47,11 @@ export default defineComponent({
 </script>
 
 <style>
-#courselist{
+#courselist {
   /*border: 1px groove #9e1b32;*/
   margin: 10px;
   background-color: #ffffff;
   border-radius: 5px;
-  padding:5px;
-}</style>
+  padding: 5px;
+}
+</style>

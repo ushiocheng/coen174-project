@@ -1,11 +1,31 @@
 <template>
   <div id="schedulechooser">
-    <p>component/ScheduleChooser</p>
+    <!-- <p>component/ScheduleChooser</p> -->
     <schedule-viewer
       :profiles="profiles"
-      @generateSchedules="() => $emit('generateSchedules')"
+      :validSchedules="validSchedules"
+      :index="index"
     />
-    <schedule-viewer-control :profiles="profiles" />
+    <schedule-viewer-control
+      :profiles="profiles"
+      :index="index"
+      @generateSchedules="
+        () => {
+          index = 0;
+          $emit('generateSchedules');
+        }
+      "
+      @increment="
+        () => {
+          if (index + 1 < validSchedules.length) index++;
+        }
+      "
+      @decrement="
+        () => {
+          if (index > 0) index--;
+        }
+      "
+    />
   </div>
 </template>
 
@@ -14,6 +34,7 @@ import ScheduleViewer from "./schedule-chooser-components/ScheduleViewer.vue";
 import ScheduleViewerControl from "./schedule-chooser-components/ScheduleViewerControl.vue";
 
 import ProfileSwitcher from "@/classes/ProfileSwitcher";
+import Section from "@/classes/Section";
 
 export default {
   components: { ScheduleViewer, ScheduleViewerControl },
@@ -22,15 +43,24 @@ export default {
       type: ProfileSwitcher,
       required: true,
     },
+    validSchedules: {
+      type: Array<Array<Section>>,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      index: 0,
+    };
   },
 };
 </script>
 
 <style>
-#schedulechooser{
-  border: 1px solid red; 
+#schedulechooser {
   margin: 10px;
   background-color: #ffffff;
   border-radius: 5px;
-  padding:5px;
-}</style>
+  padding: 5px;
+}
+</style>

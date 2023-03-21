@@ -1,7 +1,8 @@
 <template>
   <div id="mainview">
-    <p>Main View</p>
-    <editor :profiles="profiles" :courses="courses" />
+    <!-- <p>Main View</p> -->
+    <!-- <editor :profiles="profiles" :courses="courses" /> -->
+    <courses-editor :profiles="profiles" :courses="courses" />
     <schedule-chooser
       :profiles="profiles"
       @generateSchedules="
@@ -10,6 +11,7 @@
           showSchedules();
         }
       "
+      :validSchedules="validSchedules"
     />
     <timetable />
   </div>
@@ -18,8 +20,8 @@
 <script lang="ts">
 import { ref } from "vue";
 
-import Editor from "@/components/Editor.vue";
 import ScheduleChooser from "@/components/ScheduleChooser.vue";
+import CoursesEditor from "@/components/editor-components/CoursesEditor.vue";
 import timetable from "@/components/timetable.vue";
 
 import ProfileSwitcher from "@/classes/ProfileSwitcher";
@@ -31,14 +33,14 @@ profiles.createNewProfile();
 
 let courses = ref<Array<Course>>([]);
 
-let validSchedules: Section[][];
+// let validSchedules: Section[][];
 
 export default {
-  components: { Editor, ScheduleChooser, timetable },
+  components: { CoursesEditor, ScheduleChooser, timetable },
   data() {
     return {
       profiles,
-      validSchedules,
+      validSchedules: [[]] as Section[][],
       courses,
     };
   },
@@ -52,11 +54,11 @@ export default {
 </script>
 
 <style>
-#mainview{
-  border: 1px solid red;
+#mainview {
+  /* border: 1px solid red; */
   margin: 10px;
   background-color: #b30738;
   border-radius: 5px;
-  padding:5px;
+  padding: 5px;
 }
 </style>

@@ -135,6 +135,10 @@ export default class Scheduler {
     await this.updateClassList();
   }
 
+  async getAllQuarters() {
+    return await this.requester.getQuarters();
+  }
+
   async updateClassList() {
     this.classList = new Set();
 

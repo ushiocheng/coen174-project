@@ -1,7 +1,7 @@
 <template>
   <div id="courseseditor">
-    <p>CoursesEditor</p>
-    <course-list :profiles="profiles" :courses="courses" />
+    <!-- <p>CoursesEditor</p> -->
+    <!-- <course-quarter-selector :profiles="profiles"></course-quarter-selector> -->
     <course-picker
       :profiles="profiles"
       @addCourse="
@@ -10,12 +10,14 @@
         }
       "
     />
+    <course-list :profiles="profiles" :courses="courses" />
   </div>
 </template>
 
 <script lang="ts">
 import CourseList from "./course-editor-components/CourseList.vue";
 import CoursePicker from "./course-editor-components/CoursePicker.vue";
+import CourseQuarterSelector from "./course-editor-components/CourseQuarterSelector.vue";
 import Course from "@/classes/Course";
 import ProfileSwitcher from "@/classes/ProfileSwitcher";
 
@@ -26,7 +28,7 @@ import ProfileSwitcher from "@/classes/ProfileSwitcher";
 // let courses: Array<Course> = [exampleCourse1, exampleCourse2, exampleCourse3];
 
 export default {
-  components: { CourseList, CoursePicker },
+  components: { CourseList, CoursePicker, CourseQuarterSelector },
   props: {
     profiles: {
       type: ProfileSwitcher,
@@ -65,10 +67,11 @@ export default {
 </script>
 
 <style>
-#courseseditor{
-  border: 1px solid red; 
+#courseseditor {
+  /* border: 1px solid red; */
   margin: 10px;
   background-color: #ffffff;
   border-radius: 5px;
-  padding:5px;
-}</style>
+  padding: 5px;
+}
+</style>

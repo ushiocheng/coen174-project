@@ -1,13 +1,18 @@
 <template>
-  <div style="border: 1px solid green; margin: 10px">
-    <p>ScheduleViewerControl</p>
+  <div style="margin: 10px">
+    <!-- <p>ScheduleViewerControl</p> -->
     <v-container>
       <v-row>
-        <v-col cols="12" sm="6" md="4">
-          <v-btn @click="() => {}">Prev</v-btn>
+        <v-col cols="8" sm="6" md="1">
+          <v-btn @click="() => $emit('decrement')">Prev</v-btn>
         </v-col>
-        <v-col cols="12" sm="12" md="4">
-          <v-btn @click="() => {}">Next</v-btn>
+        <v-col cols="8" sm="6" md="2">
+          <v-btn @click="() => $emit('generateSchedules')"
+            >Generate Schedules</v-btn
+          >
+        </v-col>
+        <v-col cols="8" sm="6" md="1">
+          <v-btn @click="() => $emit('increment')">Next</v-btn>
         </v-col>
       </v-row>
     </v-container>

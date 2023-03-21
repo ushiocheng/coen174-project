@@ -76,6 +76,10 @@ export default class ProfileSwitcher {
     await this.activeProfile.changeQuarter(quarter);
   }
 
+  async getQuarters() {
+    return await this.activeProfile.getAllQuarters();
+  }
+
   includeCourse(courseTitle: string): boolean {
     return this.activeProfile.addCourse(courseTitle);
   }

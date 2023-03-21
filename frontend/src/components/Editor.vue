@@ -1,8 +1,8 @@
 <template>
   <div id="editor">
-    <p>component/Editor.vue</p>
+    <!-- <p>component/Editor.vue</p> -->
     <courses-editor :profiles="profiles" :courses="courses" />
-    <rules-editor />
+    <!-- <rules-editor /> -->
   </div>
 </template>
 
@@ -29,8 +29,9 @@ export default {
 </script>
 
 <style>
-#editor{
+#editor {
   margin: 10px;
   border-radius: 5px;
-  padding:5px;
-}</style>
+  padding: 5px;
+}
+</style>

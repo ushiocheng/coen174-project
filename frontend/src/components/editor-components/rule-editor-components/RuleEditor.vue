@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div id="ruleeditor">
     <p>RulesEditor/RuleEditor</p>
     <form @submit.prevent="addTodo">
@@ -53,4 +53,4 @@ export default {
   border-radius: 5px;
   padding:5px;
 }
-</style>
+</style> -->

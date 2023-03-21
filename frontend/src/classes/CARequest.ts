@@ -24,7 +24,7 @@
 
 export default class CARequest {
   activeQuarter: string = ""; // The quarter used for any future searches
-  activeQuarterID: number = 4300; // The ID of the quarter, for part of the fetch request
+  activeQuarterID: number = 4440; // The ID of the quarter, for part of the fetch request
   quarterList: Array<any> = []; // Cache the list of {activeQuarter, activeQuarterID} pairs from courseavail
   career: string;
 

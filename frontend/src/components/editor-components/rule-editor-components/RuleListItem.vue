@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div id="rulelistitem">
     <p>RulesEditor/ListItem</p>
   </div>
@@ -19,4 +19,4 @@ export default {
   background-color:#e9e8d5;
   width: 25%;
 }
-</style>
+</style> -->

@@ -13,7 +13,6 @@
       "
       :validSchedules="validSchedules"
     />
-    <!--<timetable />-->
   </div>
 </template>
 
@@ -22,7 +21,6 @@ import { ref } from "vue";
 
 import ScheduleChooser from "@/components/ScheduleChooser.vue";
 import CoursesEditor from "@/components/editor-components/CoursesEditor.vue";
-import timetable from "@/components/timetable.vue";
 
 import ProfileSwitcher from "@/classes/ProfileSwitcher";
 import Section from "@/classes/Section";
@@ -36,7 +34,7 @@ let courses = ref<Array<Course>>([]);
 // let validSchedules: Section[][];
 
 export default {
-  components: { CoursesEditor, ScheduleChooser, timetable },
+  components: { CoursesEditor, ScheduleChooser },
   data() {
     return {
       profiles,

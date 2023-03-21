@@ -1,13 +1,38 @@
 /*  Course Avail Request object */
 
+const G_FRONTEND_PROXY_URL_BASE = "/courseavail";
+const G_COURSEAVAIL_URL_BASE = "https://www.scu.edu/apps/ws/courseavail";
+
+const fetchCourseAvail = async (relativeURL: string): Promise<any> => {
+  if (!relativeURL.startsWith("/")) {
+    console.error(
+      "[WARN] fetchCourseAvail() called with incorrect parameter format."
+    );
+    relativeURL = `/${relativeURL}`;
+  }
+  try {
+    let response = await fetch(`${G_FRONTEND_PROXY_URL_BASE}${relativeURL}`);
+    return await response.json();
+  } catch (error) {
+    /* Try courseavail url */
+    // console.error(error);
+    // return [];
+    let response = await fetch(`${G_COURSEAVAIL_URL_BASE}${relativeURL}`);
+    return await response.json();
+  }
+  // Otherwise fail explicitly
+  // todo: alert
+  return {};
+};
+
 /*  FUNCTIONS
     setActiveQuarter(quarter)       changes which quarter will be used for queries
                                     (valid params: "Fall 2021", "Summer 2022", etc.)
     async getSearchResults(query)   returns a list of all the section that match the query,
                                     or an empty array if it failed
-    async getCourseList()           returns a list of all courses being offered, or an 
+    async getCourseList()           returns a list of all courses being offered, or an
                                     empty array if it failed (use this to autofill the user's input)
-    async getQuarters()             returns a list of all quarters and their id's, or an 
+    async getQuarters()             returns a list of all quarters and their id's, or an
                                     empty array if it failed
 */
 
@@ -63,22 +88,10 @@ export default class CARequest {
     };
 
     // If it is not cached, retrieve from courseavail
-    try {
-      let response = await fetch("/courseavail/autocomplete/quarters/");
-      let quarters = (await response.json()) as CAQuarterList;
-      // console.log("Quarters:", quarters.results.indb);
-      return quarters.results.indb;
-    } catch (error) {
-      /* TEMP FOR TESTING */
-      // console.error(error);
-      // return [];
-      let response = await fetch(
-        //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/
-        "https://www.scu.edu/apps/ws/courseavail/autocomplete/quarters/"
-      );
-      let quarters = (await response.json()) as CAQuarterList;
-      return quarters.results.indb;
-    }
+    const response = await fetchCourseAvail("/autocomplete/quarters/");
+    let quarters = response as CAQuarterList;
+    // console.log("Quarters:", quarters.results.indb);
+    return quarters.results.indb;
   }
 
   setActiveQuarter(quarter: string) {
@@ -154,23 +167,11 @@ export default class CARequest {
     }>
   > {
     // Request query results from courseavail
-    try {
-      let response = await fetch(
-        `/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
-      );
-      let queryMatches = await response.json();
-      return queryMatches.results;
-    } catch (error) {
-      /* TEMP FOR TESTING */
-      // console.error(error);
-      // return [];
-      let response = await fetch(
-        //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}
-        `https://www.scu.edu/apps/ws/courseavail/search/${this.activeQuarterID}/${this.career}/${query}`
-      );
-      let queryMatches = await response.json();
-      return queryMatches.results;
-    }
+    const response = await fetchCourseAvail(
+      `/search/${this.activeQuarterID}/${this.career}/${query}`
+    );
+    let queryMatches = response;
+    return queryMatches.results;
   }
 
   async getCourseList(): Promise<
@@ -183,43 +184,20 @@ export default class CARequest {
     }>
   > {
     // Request all coursed being offered for the quarter from courseavail
-    try {
-      let response = await fetch(
-        `/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
-      );
-      let allCourses = await response.json();
-      // console.log("response:", allCourses);
-      return allCourses.results;
-    } catch (error) {
-      /* TEMP FOR TESTING */
-      // console.error(error);
-      // return [];
-      let response = await fetch(
-        //https://cors-anywhere.herokuapp.com/https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses
-        `https://www.scu.edu/apps/ws/courseavail/autocomplete/${this.activeQuarterID}/${this.career}/courses`
-      );
-      let allCourses = await response.json();
-      // console.log("response:", allCourses);
-      return allCourses.results;
-    }
+
+    let response = await fetchCourseAvail(
+      `/autocomplete/${this.activeQuarterID}/${this.career}/courses`
+    );
+    let allCourses = response;
+    // console.log("response:", allCourses);
+    return allCourses.results;
   }
 
   async getSectionInfo(sectionID: string): Promise<any> {
-    try {
-      let response = await fetch(
-        `/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
-      );
-      let sectionInfo = await response.json();
-      return sectionInfo.results[0];
-    } catch (error) {
-      /* TEMP FOR TESTING */
-      // console.error(error);
-      // return [];
-      let response = await fetch(
-        `https://www.scu.edu/apps/ws/courseavail/details/${this.activeQuarterID}/${this.career}/${sectionID}`
-      );
-      let sectionInfo = await response.json();
-      return sectionInfo.results[0];
-    }
+    return (
+      await fetchCourseAvail(
+        `/details/${this.activeQuarterID}/${this.career}/${sectionID}`
+      )
+    ).results[0];
   }
 }

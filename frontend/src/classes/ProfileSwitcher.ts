@@ -2,42 +2,43 @@ import Scheduler from "./Scheduler";
 import Section from "./Section";
 
 export default class ProfileSwitcher {
-  // Keep track of how many profiles have been created
-  numProfiles: number;
-
   // All the schedules that can be switched between
   profiles: Map<string, Scheduler>;
 
   // The schedule currently selected
-  activeProfile: Scheduler;
+  activeProfile: Scheduler = new Scheduler();
 
   // Name of the schedule currently selected
-  activeProfileName: string;
+  activeProfileName: string = "Default";
 
   constructor() {
     this.profiles = new Map();
-    this.numProfiles = 0;
+    this.createNewProfile("Default");
   }
 
-  async createNewProfile(
-    name: string = `Profile ${(this.numProfiles + 1).toString()}`
-  ) {
+  async createNewProfile(name: string = "") {
     if (name.length === 0)
-      name = `Profile ${(this.numProfiles + 1).toString()}`;
+      name = `Profile ${(this.profiles.keys.length + 1).toString()}`;
+
     // Create and initialize a new scheduler object
     let newScheduler = new Scheduler();
-    await newScheduler.preLoad();
 
     // Add it to the map of all schedulers
     this.profiles.set(name, newScheduler);
-    this.numProfiles++;
 
-    // Set the new one to be the active schedule
-    this.activeProfile = newScheduler;
-    this.activeProfileName = name;
+    return newScheduler.preLoad().then(() => {
+      // Set the new one to be the active schedule
+      this.activeProfile = newScheduler;
+      this.activeProfileName = name;
+    });
   }
 
   removeProfile(name: string) {
+    if (name==="Default") {
+      console.log("[WARN] deleting default profile is converted to clearring profile");
+      this.profiles.get("Default")?.clearCourses();
+      return;
+    }
     if (this.activeProfileName === name) {
       this.activeProfile = this.profiles.values().next().value;
       this.activeProfileName = this.profiles.keys().next().value;

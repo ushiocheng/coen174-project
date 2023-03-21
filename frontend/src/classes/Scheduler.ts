@@ -77,6 +77,8 @@ export default class Scheduler {
     //this makes requests to the scu course avail
     this.requester = new CARequest();
 
+    this.filledSections = [];
+
     //the courses the user currently has selected to be part of the schedule
     //this does not include un scheduled courses
     this.selectedCourses = new Map<string, Course>();
@@ -227,6 +229,12 @@ export default class Scheduler {
       this.selectedCourses.delete(courseString) &&
       this.selectedCourseNames.delete(courseString)
     );
+  }
+
+  clearCourses() {
+    this.selectedCourseNames.forEach((name) => {
+      this.removeCourse(name);
+    });
   }
 
   chooseNumberOfCLasses(maxClasses: number) {

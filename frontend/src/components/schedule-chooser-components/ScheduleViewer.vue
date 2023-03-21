@@ -45,7 +45,7 @@ export default {
           display += `${section.startTime.toLocaleTimeString()} - `;
         } catch (err) {}
         try {
-          display += `${section.endTime.toLocaleTimeString()}`;
+          display += `${section.endTime.toLocaleTimeString()} `;
         } catch (err) {}
         display += `${section.haveClassIn["M"] ? "M" : ""}`;
         display += `${section.haveClassIn["T"] ? "T" : ""}`;

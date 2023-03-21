@@ -8,6 +8,7 @@
     />
     <schedule-viewer-control
       :profiles="profiles"
+      :validSchedules="validSchedules"
       :index="index"
       @generateSchedules="
         () => {

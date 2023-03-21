@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       profiles,
-      validSchedules: [[]] as Section[][],
+      validSchedules: [] as Section[][],
       courses,
     };
   },
